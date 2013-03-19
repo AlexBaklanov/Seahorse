@@ -1,0 +1,10 @@
+Friends Names
+	ID 001 = Buzzy
+	ID 002 = Fozzy
+	ID 003 = Dazzy
+
+GameOver
+
+	ID 004 = You traveled: 
+	ID 005 = Coby needs to breathe.
+	ID 006 = Coins earned: 

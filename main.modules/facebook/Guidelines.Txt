@@ -1,0 +1,54 @@
+This is a module to interact with facebook dialogs, it requires diddy and access to a web browser
+
+1. Initial Setup
+2. Dialogs
+2a. WallPost
+2b. Friend Request
+
+
+1 *********************************Initial Setup *********************************
+Before any of the dialogs can  be used you need to register your application and website on http://developers.facebook.com
+You will be provided with an AppID which you will need to input setup in your application first.
+You can do this with the following function in OnCreate
+
+FBSetUpApp([AppID],[AppName],[AppLogoURL],[AppURL])
+
+Anything surrounded in brackets is information you need to change
+
+[AppID] = The numerical ID of your application provided by facebook
+[AppName] = A string with your application name, does not have to match facebook but cannot be more than 60 chars long
+[AppLogoUrl] = A URL for your applications logo stored on the web, I personally use the one facebook generates on the developers.facebook.com page
+[AppURL] = A URL linking to your application, must be registered on facebook as associated to your app. It can also be a link to your facebook canvas
+
+2**************************************Dialogs*************************************
+
+2a************* Wall Posts ************
+
+You can post to someones wall by calling the function
+
+FBWallPost([Caption],[Message],[Popup])
+
+[Caption] = A title for the dialog
+[Message] = The message you want to post on the wall e.g. "I have a new score" + ScoreVariable
+[Popup] = Boolean value, (True/False) If the game is embedded in an Iframe (On MonkeyCoder or Facebook itself) this is required to be true. Causes the dialog to open a popup window
+	
+2b *********** Requests ***************
+
+You can send a request to the users friends for example, user requests you play this game
+please bear it in mind with the dialog you cannot get a comfirmation that the other player accepted it directly from this module
+
+FBRequestPost[Message],[Popup]
+
+[Message] = The message you wish to send the other user e.g. "Come play my awesome game"
+[Popup] = Boolean value, (True/False) If the game is embedded in an Iframe (On MonkeyCoder or Facebook itself) this is required to be true. Causes the dialog to open a popup window
+
+It will redirect to your global AppURL so if you with to redirect somewhere else you need to call FBSetupApp and change it
+
+2c ******Friend request***************
+
+You can get people to send you a friend requesting using this function
+
+FBFriendRequest([PersonsIDOnFacebook],[Popup])
+
+[PersonsIDOnFacebook] = Your ID on facebook usually your Firstname.lastname, check your profiles page and you will see it in the address bar
+[Popup] = Boolean value, (True/False) If the game is embedded in an Iframe (On MonkeyCoder or Facebook itself) this is required to be true. Causes the dialog to open a popup window

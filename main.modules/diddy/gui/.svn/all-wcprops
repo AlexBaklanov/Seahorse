@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/311/trunk/src/diddy/gui
+END
+gui.monkey
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/193/trunk/src/diddy/gui/gui.monkey
+END
+components.monkey
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/311/trunk/src/diddy/gui/components.monkey
+END
+core.monkey
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/215/trunk/src/diddy/gui/core.monkey
+END
+layout.monkey
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/201/trunk/src/diddy/gui/layout.monkey
+END

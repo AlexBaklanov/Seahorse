@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/325/trunk/src/diddy/native
+END
+diddy.html5.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/325/trunk/src/diddy/native/diddy.html5.js
+END
+diddy.xna.cs
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/325/trunk/src/diddy/native/diddy.xna.cs
+END
+diddy.ios.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/325/trunk/src/diddy/native/diddy.ios.cpp
+END
+diddy.flash.as
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/325/trunk/src/diddy/native/diddy.flash.as
+END
+diddy.glfw.mac.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/325/trunk/src/diddy/native/diddy.glfw.mac.cpp
+END
+diddy.android.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/325/trunk/src/diddy/native/diddy.android.java
+END
+diddy.glfw.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/325/trunk/src/diddy/native/diddy.glfw.cpp
+END

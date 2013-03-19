@@ -1,0 +1,19 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"*sublime*",
+				"*README*"
+			],
+			"folder_exclude_patterns":
+			[
+				"main.build",
+				"main.data",
+				"main.modules"
+			],
+			"path": "/Projects/Seahorse"
+		}
+	]
+}
