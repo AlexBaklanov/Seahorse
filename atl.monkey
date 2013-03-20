@@ -5,29 +5,53 @@ Import imp
 Class atlasClass
 
 	Field xStart:Int[128], yStart:Int[128], width:Int[128], height:Int[128]
-	Field img:Image
+	Field img:Image, thpath:String
 
 	Method Load:Void(path:String)
 
+		'load image atlas'
 		img = LoadImage( path )
 
-		Local tempData:String = app.LoadString( path[ ..path.Length() - 4 ] + ".txt" )
+		thpath = path
 
+		'correct path'
+		Local correctPath:Int = 4
+		Local retinaValue:Int
+
+		If path.Contains("@p") 
+			retinaValue = 2
+			correctPath = 6
+		End
+		If path.Contains("@2x") 
+			retinaValue = 2
+			correctPath = 7
+		End
+		If path.Contains("@2x@2x") 
+			retinaValue = 4
+			correctPath = 10
+		End
+		'end correct path'
+
+		'load data for atlas'
+		Local tempData:String = app.LoadString( path[ ..path.Length() - correctPath ] + ".txt" )
+
+		'atlas images enumerator'
 		Local imageNumber:Int = 0
 
+		'read data from txt'
 		For Local rectLine:String = EachIn tempData.Split("~n")
 
 			For Local rectValue:String = EachIn rectLine.Split(",")
 
 				Select rectValue[0..1]
 
-					Case "x" xStart[imageNumber] = Int(rectValue[1..])
+					Case "x" xStart[imageNumber] = Int(rectValue[1..])*retinaValue
 
-					Case "y" yStart[imageNumber] = Int(rectValue[1..])
+					Case "y" yStart[imageNumber] = Int(rectValue[1..])*retinaValue
 
-					Case "w" width[imageNumber] = Int(rectValue[1..]) - xStart[imageNumber]
+					Case "w" width[imageNumber] = Int(rectValue[1..])*retinaValue - xStart[imageNumber]
 
-					Case "h" height[imageNumber] = Int(rectValue[1..]) - yStart[imageNumber]
+					Case "h" height[imageNumber] = Int(rectValue[1..])*retinaValue - yStart[imageNumber]
 
 				End
 

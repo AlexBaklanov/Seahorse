@@ -14,6 +14,7 @@ Class GameGW Extends App
 
 			MainInit()
 			
+			
 		End
 		
 		Method OnUpdate()

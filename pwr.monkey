@@ -376,7 +376,7 @@ Function PowersDraw:Void()
 		'If waveBack = False Return
 		
 	End
-	DrawText(touchDownTime, 100,100)
+	'DrawText(touchDownTime, 100,100)
 	'DrawText(sclWave, 100,100)
 
 End

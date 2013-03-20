@@ -1,10 +1,10 @@
-Import mojo.app
+Import mojo
 Import os
 'Import iosLib
 'Import iap
 'Import utils
 'Import monkey
-Import diddy
+'Import diddy
 
 Import glb
 Import ini

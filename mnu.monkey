@@ -14,7 +14,8 @@ Global playSurvivalBtn := New Buttons
 
 Global reset_btn:Buttons = New Buttons
 
-Global menuPerc:Image[4]
+'Global menuPerc:Image[4]
+Global menuPerces := New atlasClass
 
 Global tempAnim:AnimBundle
 
@@ -31,8 +32,10 @@ Class menuClass
 		For Local lp:Int = 1 To 3
 			levelPlay[lp] = New Buttons
 			levelPlay[lp].Init("", "menu/level"+lp+"",1,1,2)
-			menuPerc[lp] = LoadImage( "menu/menuPerc0" + lp + "" + loadadd + ".png" )
+			'menuPerc[lp] = LoadImage( "menu/menuPerc0" + lp + "" + loadadd + ".png" )
 		Next
+
+		menuPerces.Load("menu/menuPerces" + loadadd + ".png")
 
 		flare = LoadImage("flare.png", 1, Image.MidHandle)
 
@@ -47,6 +50,10 @@ Class menuClass
 		'tempAnim.animType = 0
 
 	End
+
+	Field am:Int
+	Field swimPerc:Float
+	Field rotateFlare:Float
 
 	Method Update:String()
 
@@ -75,6 +82,16 @@ Class menuClass
 
 		End
 
+		'Perc rotation'
+		rotateFlare += .3
+		If rotateFlare > 360 rotateFlare = 0
+
+		am += 1
+		If am > 300 am = 0
+
+		If am < 150 swimPerc += .05 Else swimPerc -= .05
+
+		'Shop btn'
 		If CurrentLevel < 4 And shopMenuBtn.Pressed()
 
 			menu.Deinit()
@@ -102,25 +119,17 @@ Class menuClass
 
 	End
 
-	Field am:Int
-	Field swimAm:Float
-	Field rotAm:Float
-
 	Method Draw:Void()
-
-		rotAm += .3
-		If rotAm > 360 rotAm = 0
-
-		am += 1
-		If am > 300 am = 0
-
-		If am < 150 swimAm += .05 Else swimAm -= .05
 
 		DrawImage ( bgr, dw/2, dh/2, 0 , retinaScl, retinaScl )
 
-		DrawImage ( menuPerc[1], -5 - swimAm, 								dh - menuPerc[1].Height() + swimAm, swimAm/5, 1,1 )
-		DrawImage ( menuPerc[2], dw - menuPerc[2].Width() + swimAm, 		-5 - swimAm,						swimAm/5, 1,1 )
-		DrawImage ( menuPerc[3], dw - menuPerc[3].Width() + swimAm, 		dh - menuPerc[3].Height() + swimAm, swimAm/5, 1,1 )
+		'DrawImage ( menuPerc[1], -5 - swimPerc, 								dh - menuPerc[1].Height() + swimPerc, swimPerc/5, 1,1 )
+		'DrawImage ( menuPerc[2], dw - menuPerc[2].Width() + swimPerc, 		-5 - swimPerc,						swimPerc/5, 1,1 )
+		'DrawImage ( menuPerc[3], dw - menuPerc[3].Width() + swimPerc, 		dh - menuPerc[3].Height() + swimPerc, swimPerc/5, 1,1 )
+
+		menuPerces.Draw(0, 	-5 - swimPerc, 								dh - menuPerces.height[0] + swimPerc, 		swimPerc/5)
+		menuPerces.Draw(1, 	dw - menuPerces.width[1] + swimPerc, 		-5 - swimPerc,								swimPerc/5)
+		menuPerces.Draw(2, 	dw - menuPerces.width[2] + swimPerc, 		dh - menuPerces.height[2] + swimPerc, 		swimPerc/5)
 
 		reset_btn.Draw( dw - reset_btn.Width, dh/3*2 )
 
@@ -135,7 +144,7 @@ Class menuClass
 		End
 
 		SetBlend(1)
-		DrawImage( flare, dw/2, dh/2, rotAm, 3, 3 )
+		DrawImage( flare, dw/2, dh/2, rotateFlare, 3, 3 )
 		SetBlend(0)
 		levelPlay[CurrentLevel].Draw( dw/2 - levelPlay[CurrentLevel].Width/2, dh/2 - levelPlay[CurrentLevel].Height/2	   )
 		DrawFont ( "", dw/2 - levelPlay[CurrentLevel].Width/2, dh/5, True	)
@@ -144,7 +153,7 @@ Class menuClass
 
 		'tempAnim.Draw(dw/2, dh/2)
 
-		'DrawText(swimAm, 10,10)
+		'DrawText(menuPerces.thpath, 10,10)
 
 	End
 
@@ -154,8 +163,9 @@ Class menuClass
 
 		For Local lp:Int = 1 To 3
 			levelPlay[lp].Deinit()
-			menuPerc[lp].Discard()
 		Next
+
+		menuPerces.Deinit()
 
 		shopMenuBtn.Deinit()
 

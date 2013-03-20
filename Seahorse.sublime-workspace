@@ -626,8 +626,16 @@
 			"file": "atl.monkey",
 			"settings":
 			{
-				"buffer_size": 234,
+				"buffer_size": 1092,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Seahorse.sublime-project",
+			"settings":
+			{
+				"buffer_size": 228,
+				"line_ending": "Unix"
 			}
 		},
 		{
@@ -722,7 +730,7 @@
 			"file": "imp.monkey",
 			"settings":
 			{
-				"buffer_size": 327,
+				"buffer_size": 338,
 				"line_ending": "Windows"
 			}
 		},
@@ -731,6 +739,14 @@
 			"settings":
 			{
 				"buffer_size": 6878,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "itm.monkey",
+			"settings":
+			{
+				"buffer_size": 3325,
 				"line_ending": "Windows"
 			}
 		}
@@ -1012,7 +1028,7 @@
 	"groups":
 	[
 		{
-			"selected": 13,
+			"selected": 14,
 			"sheets":
 			[
 				{
@@ -1370,15 +1386,15 @@
 					"file": "atl.monkey",
 					"settings":
 					{
-						"buffer_size": 234,
+						"buffer_size": 1092,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								223,
-								223
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1394,6 +1410,33 @@
 				},
 				{
 					"buffer": 14,
+					"file": "Seahorse.sublime-project",
+					"settings":
+					{
+						"buffer_size": 228,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								228,
+								228
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 15,
 					"file": "/Users/alexbacklanov/Documents/Silhouette.svg",
 					"settings":
 					{
@@ -1421,7 +1464,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 16,
 					"file": "enm1.monkey",
 					"settings":
 					{
@@ -1448,7 +1491,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 17,
 					"file": "wpn.monkey",
 					"settings":
 					{
@@ -1475,7 +1518,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 18,
 					"file": "com.monkey",
 					"settings":
 					{
@@ -1502,7 +1545,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 19,
 					"file": "mnu.monkey",
 					"settings":
 					{
@@ -1529,7 +1572,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 19,
+					"buffer": 20,
 					"file": "txt.monkey",
 					"settings":
 					{
@@ -1556,7 +1599,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 20,
+					"buffer": 21,
 					"file": "hro.monkey",
 					"settings":
 					{
@@ -1583,7 +1626,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 21,
+					"buffer": 22,
 					"file": "anm.monkey",
 					"settings":
 					{
@@ -1609,7 +1652,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 22,
+					"buffer": 23,
 					"file": "anim.monkey",
 					"settings":
 					{
@@ -1635,7 +1678,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 23,
+					"buffer": 24,
 					"file": "main.monkey",
 					"settings":
 					{
@@ -1662,7 +1705,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 24,
+					"buffer": 25,
 					"file": "glb.monkey",
 					"settings":
 					{
@@ -1689,19 +1732,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 25,
+					"buffer": 26,
 					"file": "imp.monkey",
 					"settings":
 					{
-						"buffer_size": 327,
+						"buffer_size": 338,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								327,
-								327
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1715,7 +1758,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 26,
+					"buffer": 27,
 					"file": "strm.monkey",
 					"settings":
 					{
@@ -1737,6 +1780,33 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 3524.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 28,
+					"file": "itm.monkey",
+					"settings":
+					{
+						"buffer_size": 3325,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								257,
+								257
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/monkey.sublime/Monkey.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
