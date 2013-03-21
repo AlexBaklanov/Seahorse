@@ -81,7 +81,7 @@ End
 	'88  .8D 88 `88. 88   88 `8b d8'8b d8' 
 	'Y8888D' 88   YD YP   YP  `8b8' `8d8'  
 
-Function FriendDraw:Void()
+Function FriendMeetingDraw:Void()
 
 	If isFriendShown And friendX > -friendImg.Width()
 

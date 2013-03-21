@@ -6,6 +6,8 @@ Global enCounter:Int = 30
 Global enemiesChance:Int[30]
 Global enemies:enemiesClass = New enemiesClass
 
+Global enemiesCount:Int
+
 Global OldLevel:Int
 
 Class enemiesClass
@@ -15,12 +17,21 @@ Class enemiesClass
 	Field img:Image[50]
 
 	Field closeToHero:Int
+
+	'd888888b d8b   db d888888b d888888b 
+	'  `88'   888o  88   `88'   `~~88~~' 
+	'   88    88V8o 88    88       88    
+	'   88    88 V8o88    88       88    
+	'  .88.   88  V888   .88.      88    
+	'Y888888P VP   V8P Y888888P    YP    
 	
 	Method Init:Void()
 		
 		OldLevel = CurrentLevel
 
 		enemyCounter = enCounter
+
+		enemiesReadData()
 
 		Local zeroAdd:String
 
@@ -64,6 +75,13 @@ Class enemiesClass
 
 	End
 
+	'db    db d8888b. d8888b.  .d8b.  d888888b d88888b 
+	'88    88 88  `8D 88  `8D d8' `8b `~~88~~' 88'     
+	'88    88 88oodD' 88   88 88ooo88    88    88ooooo 
+	'88    88 88~~~   88   88 88~~~88    88    88~~~~~ 
+	'88b  d88 88      88  .8D 88   88    88    88.     
+	'~Y8888P' 88      Y8888D' YP   YP    YP    Y88888P
+
 	Method Update:Void()
 
 		If GameOverMode = False enemyCounter -= 1
@@ -82,11 +100,11 @@ Class enemiesClass
 			If friendMode = False And weaponCamouflage.active <> 1 And weaponHyperJump.active <> 1 And en.kicked = False And en.x < closeToHero
 
 				'COLLISION'
-				If Distance(en.x, en.y, hero.x, hero.y) < 5*Retina + en.img.Width() * en.sclX * en.radius / 2 And en.catched = False
+				If Distance(en.x, en.y, hero.x, hero.y) < 5 * Retina + en.img.Width() * en.sclX * en.radius / 2 And en.catched = False
 					
 					If en.kicked
 
-						en.xMove = speed*globalSpeed*20
+						en.xMove = speed * globalSpeed * 20
 						en.yMove = (en.y - hero.y) / 10.0
 						en.rotSpeed = (en.y - hero.y) / 10.0
 
@@ -148,15 +166,35 @@ Class enemiesClass
 
 	End
 
+	'd8888b. d8888b.  .d8b.  db   d8b   db 
+	'88  `8D 88  `8D d8' `8b 88   I8I   88 
+	'88   88 88oobY' 88ooo88 88   I8I   88 
+	'88   88 88`8b   88~~~88 Y8   I8I   88 
+	'88  .8D 88 `88. 88   88 `8b d8'8b d8' 
+	'Y8888D' 88   YD YP   YP  `8b8' `8d8'  
+
 	Method Draw:Void()
+
+		'enemiesCount = 0
 
 		For Local en := Eachin enemy
 
 			en.Draw()
 
+			'enemiesCount += 1
+
 		Next
+		'DrawText("From: " + enemySpeed[2][6..9] + " To: " + enemySpeed[2][12..15], 200, 200)
+		'DrawText(enemyYMove[12], 200, 200)
 
 	End
+
+	'd8888b. d88888b d888888b d8b   db d888888b d888888b 
+	'88  `8D 88'       `88'   888o  88   `88'   `~~88~~' 
+	'88   88 88ooooo    88    88V8o 88    88       88    
+	'88   88 88~~~~~    88    88 V8o88    88       88    
+	'88  .8D 88.       .88.   88  V888   .88.      88    
+	'Y8888D' Y88888P Y888888P VP   V8P Y888888P    YP    
 
 	Method Deinit:Void()
 

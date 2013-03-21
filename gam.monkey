@@ -129,7 +129,7 @@ Class mainGameClass
 
 		hero.Draw()
 
-		FriendDraw()
+		FriendMeetingDraw()
 
 		StreamsDraw()
 		
@@ -149,8 +149,8 @@ Class mainGameClass
 		If winMode DrawWin()
 
 		'If distance > 100 DrawText(validEnemies[0], 10, 100)
-		'DrawText(speed, 10, 120)
-		'DrawText(globalSpeed, 10, 140)
+		'DrawText(enemiesCount, 10, 120)
+		'DrawText(crabFinalGameOverDelay, 10, 140)
 
 		If pauseMode DrawPause()
 

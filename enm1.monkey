@@ -4,7 +4,39 @@ Import imp
 
 Global rnen:Int
 
-Global enemyDamage:Int[] = [0, 40, 5, 15, 14, 40, 10, 5, 30, 10, 20, 15, 45, 50, 50, 30, 10, 25, 50, 45, 35, 40, 35, 35, 45, 20, 20, 5, 25, 30, 25]
+'static parameters'
+Global enemyDamage:Int[31]
+Global enemySpeed:String[31]
+Global enemyScale:String[31]
+Global enemyAnim:String[31]
+Global enemyRotSpeed:Float[31]
+Global enemyYMove:Float[31]
+
+Function enemiesReadData:Void()
+
+	Local tempData:String = app.LoadString( "enemies/enemiesConfig.txt" )
+
+	Local enemyCounter:Int = 0
+
+	'read data from txt'
+	For Local enemyLine:String = EachIn tempData.Split("~n")
+
+		For Local enemyParam:String = EachIn enemyLine.Split(", ")
+
+			If enemyParam.Contains("damage") 	enemyDamage[enemyCounter] = 	Int(enemyParam[7..9])
+			If enemyParam.Contains("speed") 	enemySpeed[enemyCounter] = 		enemyParam ' For later use in Rnd'
+			If enemyParam.Contains("scale") 	enemyScale[enemyCounter] = 		enemyParam  'For later use in Rnd'
+			If enemyParam.Contains("anim") 		enemyAnim[enemyCounter] = 		enemyParam  'For later use in Rnd'
+			If enemyParam.Contains("rotspd") 	enemyRotSpeed[enemyCounter] = 	Float(enemyParam[7..11])
+			If enemyParam.Contains("ymove") 	enemyYMove[enemyCounter] = 		Float(enemyParam[6..9])
+
+		Next
+
+		enemyCounter += 1
+
+	Next
+
+End
 
 Class enemyClass
 	
@@ -30,182 +62,105 @@ Class enemyClass
 		x = dw + img.Width()
 		y = Rnd(0,dh)
 		rot = Rnd(0,360)
-		sclX = 1
-		sclY = 1
-		spd = 1
+		sclX = Rnd( Float(enemyScale[theType][6..9]), Float(enemyScale[theType][12..15]) )
+		sclY = sclX
+		spd = Rnd( Float(enemySpeed[theType][6..9]), Float(enemySpeed[theType][12..15]) )
+		anim = Rnd( Int(enemySpeed[theType][5..7]), Int(enemySpeed[theType][8..10]) )
+		rotSpeed = Rnd(-enemyRotSpeed[theType], enemyRotSpeed[theType])
 		damage = enemyDamage[theType]
+		yMove = Rnd(-enemyYMove[theType], enemyYMove[theType])
 		radius = 1
 
 		Select theType
 
-			'ball of grass'
-			Case 1
-				spd = Rnd(2,3)
-				rotSpeed = Rnd(-1, 1)
-				yMove = Rnd(-.8, .8)
-				anim = Rnd(0,20)
-
-			'red star'
-			Case 2
-				spd = Rnd(1,2)
-				rotSpeed = Rnd(-3, 3)
-				anim = Rnd(0,60)
-
 			'one legged crab'
 			Case 3
-				spd = .2
 				rot = 0
 				swimForce = -1
 				swimNegPosRnd = -1
 				y = Rnd( dh/2, dh*2 )
-				
 				radius = .8
-				
-				sclX = Rnd(.9 ,1)
-				sclY = sclX
 
 			'crab otshelnik'
 			Case 4
-				spd = .2
 				rot = 0
 				swimForce = -1
 
 			'snail with eyes'
 			Case 5
 				yForce = -1
-				spd = Rnd(2,2.5)
 				rotSpeed = Rnd(1,5)
 				y = Rnd(dh/5,dh + dh/5)
-				sclX = Rnd(.6, 1)
-				sclY = sclX
 
 			'blue back eyed shell'
 			Case 6
-				spd = 2.5
 				rot = 0
-				sclX = Rnd(.8, 1)
-				sclY = sclX
 				sclStart = sclX
 				yForce = 1
-				anim = Rnd(0,4)
 				radius = .6
 			
 			'jewel shell'
 			Case 7
-				spd = Rnd(2,3)
-				rotSpeed = Rnd(-1, 1)
-				yMove = Rnd(-.8, .8)
-				anim = Rnd(0,3)
 				animSpd = Rnd(.3,.4)
-				sclX = .8
-				sclY = sclX
 
 			'meduze'
 			Case 8
-				spd = 1
-				rotSpeed = Rnd(-.2, .2)
-				sclX = Rnd(.8, 1)
-				sclY = sclX
-				rot = Rnd(0, 360)
 				frame = Rnd(0,3)
-				
 				radius = .75
 
 			'malki 2'
 			Case 9
-				spd = .2
 				rot = 0
 				swimForce = -1
 
 			'croissant'
 			Case 10
 				yForce = -1
-				spd = 2
 				rotSpeed = -3
 				rot = 45
 				y = Rnd(dh/5,dh + dh/5)
-				sclX = Rnd(.6, 1)
-				sclY = sclX
 				yStart = y
 				animSpd = .2
 
 			'fast green'
 			Case 11
-				spd = .1
-				rot = 0
-				sclX = Rnd(.8, 1)
-				sclY = sclX
-				yMove = Rnd(-2, 2)
 				rot = yMove * 5
 				fixedSpeed = True
-				
 				radius = .8
 
 			'white meduze'
 			Case 12
 				yForce = -1
-				spd = Rnd(1,1.5)
-				rotSpeed = 0
 				rot = 0
 				y = Rnd(dh/5,dh + dh/5)
 				yStart = y + 10.0
-				sclX = Rnd(.8, 1)
-				sclY = sclX
-				anim = 0
 				radius = .5
 
 			'sparks
 			Case 13
 				yForce = -1
-				spd = Rnd(2,2.5)
 				rotSpeed = Rnd(1, 2)
 				y = Rnd(dh/5,dh + dh/5)
-				sclX = Rnd(.6, 1)
-				sclY = sclX
 				swimX = 3
 
-			'eg'
-			Case 14
-				spd = Rnd(1,2)
-				rotSpeed = Rnd(-1, 1)
-				yMove = Rnd(-.8, .8)
-				anim = Rnd(0,10)
-				sclX = Rnd(.4, .8)
-				sclY = sclX
-
-			'fast yellow shell
-			Case 15
-				spd = 1
-				rotSpeed = 0
+			Case 15, 19, 21
 				rot = 0
-				yMove = 0
 
 			' triangle nose
 			Case 16
-				spd = Rnd(1, 2)
 				yForce = 5
-				sclX = Rnd(.8, 1)
-				sclY = sclX
 				rot = 45
 				animSpd = .4
 				
 			'ersh
 			Case 17
-				spd = Rnd(1,2)
-				rotSpeed = 0
 				rot = 0
-				yMove = Rnd(-.8, .8)
-				anim = Rnd(0,3)
 				animSpd = .1
-				sclX = 1
-				sclY = sclX
 				frame = Rnd(0,8)
 				radius = frame/7.7 + .3
 
 			'corner red fish
 			Case 18
-				spd = 2
-				rotSpeed = 0
 				Local updn:Int = Rnd(-10, 10)
 				If updn >= 0
 					y = 0
@@ -214,22 +169,10 @@ Class enemyClass
 					y = dh
 					yForce = -1
 				End
-				sclX = Rnd(.6, .8)
-				sclY = sclX
-				
 				radius = .8
-
-			'sea hedgehog
-			Case 19
-				spd = Rnd(1,2)
-				rotSpeed = Rnd(-2,2)
-				rot = 0
-				yMove = Rnd(-.8, .8)
-				anim = Rnd(0,10)
 
 			'nautilus new'
 			Case 20
-				spd = 2
 				Local updn:Int = Rnd(-10, 10)
 				If updn >= 0
 					y = 0
@@ -238,43 +181,22 @@ Class enemyClass
 					y = dh
 					yForce = -1
 				End
-				sclX = Rnd(.8, 1)
-				sclY = sclX
-				rotSpeed = Rnd(-10,10)
-
-			'electric eel
-			Case 21
-				spd = Rnd(1,2)
-				rotSpeed = Rnd(-2,2)
-				rot = 0
-				yMove = Rnd(-.8, .8)
-				anim = Rnd(0,10)
 
 			'fast squid'
 			Case 22
-				spd = .1
-				yMove = Rnd(-2, 2)
 				rot = yMove * 5 + 10
 				fixedSpeed = True
-				
 				radius = .6
-				
-				sclX = Rnd(.8, 1)
-				sclY = sclX
 
 			'half shell'
 			Case 23
-				spd = .2
 				rot = 0
 				swimForce = -1
 				swimNegPosRnd = -1
-
 				y = Rnd( dh/2, dh*2 )
 
 			'meduze pink
 			Case 24
-				spd = 2
-				rotSpeed = 0
 				rot = -90
 				Local updn:Int = Rnd(-10, 10)
 				If updn >= 0
@@ -284,75 +206,39 @@ Class enemyClass
 					y = dh
 					yForce = -1
 				End
-				sclX = Rnd(.8, 1) sclY = sclX
 				animSpd = .2
 
 			'ball of grass'
 			Case 25
-				spd = Rnd(1,2)
-				rotSpeed = 0
 				rot = 0
-				yMove = Rnd(-.8, .8)
-				anim = Rnd(0,5)
-				
 				radius = .8
-				
-				sclX = Rnd(.7, 1)
-				sclY = sclX
 				
 
 			'shark
 			Case 26
-				spd = .1
 				rot = 0
-				sclX = Rnd(.9, 1) sclY = sclX
 				fixedSpeed = True
 				animSpd = .2
 
 			'dark udilshik
 			Case 27
-				spd = Rnd(1,2)
-				rotSpeed = 0
 				rot = 0
-				yMove = Rnd(-.2, .2)
-				anim = 0
-				sclX = Rnd(.7, 1) sclY = sclX
 				radius = .5
 				animSpd = .2
 
 			'meduze'
 			Case 28
-				spd = 1
-				rotSpeed = Rnd(-.2, .2)
-				sclX = Rnd(.8, 1) sclY = sclX
-				rot = Rnd(0, 360)
 				frame = Rnd(0, 3)
 
 			'green leafs paparotnik
 			Case 29
-				spd = 1
-				rotSpeed = Rnd(-.2, .2)
-				sclX = Rnd(.8, 1) sclY = sclX
-				rot = Rnd(0, 360)
 				frame = Rnd(0, 2)
 
 			'long fish
 			Case 30
-				spd = .2
 				rot = 0
 				swimForce = -1
 				radius = .6
-				sclX = Rnd(.5,.7)
-				sclY = sclX
-
-			''
-			Case 200
-			
-				spd = 1
-				rotSpeed = Rnd(-.2, .2)
-				sclX = Rnd(.5, 1)
-				sclY = sclX
-				rot = Rnd(0, 360)
 
 		End
 
@@ -371,7 +257,7 @@ Class enemyClass
 
 		If kicked
 			x += xMove
-			y += yMove
+			y += yMove * Retina
 			rot += rotSpeed
 			Return
 		End

@@ -11,8 +11,14 @@ Global progressWay:Image
 Global youX:Float
 Global youY:Float
 Global youSpd:Float
+Global youScaleX:Float
+Global youScaleSpd:Float
+Global youFinalStop:Bool
 
 Global progressHeight:Int
+Global progressBgrScale:Float
+Global progressBgrScaleStop:Bool
+Global progressBgrScaleSpd:Float
 
 Global distance:Float
 Global distanceLast:Int
@@ -52,11 +58,17 @@ Function GameOverInit:Void()
 	progressBgr = LoadImage( "progress_bgr" +  loadadd + ".png", 1, Image.MidHandle )
 	progressYou = LoadImage( "progress_you" +  loadadd + ".png", 1, Image.MidHandle )
 	progressWay = LoadImage( "progress_way" +  loadadd + ".png" )
+	progressBgrScale = 0.0
+	progressBgrScaleSpd = .12
+	progressBgrScaleStop = False
 	
 	progressHeight = dh/2 - progressBgr.Height()/3
-	youX = -progressYou.Width()
+	youX = dw'distanceGUI * 10 '-progressYou.Width()
 	youY = progressHeight
 	youSpd = 0
+	youScaleSpd = .1
+	youScaleX = 1.0
+	youFinalStop = True
 
 	acceleration = 0
 
@@ -73,20 +85,14 @@ Global blinkYou:Float
 
 Function GameOverDraw:Void()
 	
-	'DrawFadeBgr()
-	
-	'DISTANCE DRAW'
-
-	
-	
 	'Bgr
-	DrawImage( progressBgr, dw/2, progressHeight )
+	DrawImage( progressBgr, dw/2, progressHeight, 0, progressBgrScale, progressBgrScale )
 	
 	'New way
 	'DrawImageRect( progressWay, dw/2 - distGUILenght*Retina/2, progressHeight, 0, 0, distanceGUI, progressWay.Height() )
 
-	If distanceGUI > distanceGUILast
-	
+	If distanceGUI > distanceGUILast And youFinalStop And progressBgrScaleStop
+		
 		Local yellowZero:Int = 	(progressBgr.Width()/2 - distGUILenght/2*Retina)
 		Local yellowFrom:Int = 	yellowZero + distanceGUILast
 		Local yellowTo:Int = 	distanceGUI - distanceGUILast
@@ -99,9 +105,9 @@ Function GameOverDraw:Void()
 	End
 	
 	'YOU
-	DrawImage( progressYou, dw/2 - distGUILenght*Retina/2 + youX, youY )
+	DrawImage( progressYou, dw/2 - distGUILenght*Retina/2 + youX + (youScaleX - 1.0) * 12 * Retina, youY, 0, youScaleX, 1 )
 	SetAlpha(.5)
-	DrawImage( progressYou, dw/2 - distGUILenght*Retina/2 + distanceGUILast, youY )
+	DrawImage( progressYou, dw/2 - distGUILenght*Retina/2 + distanceGUILast, youY, 0, progressBgrScale, progressBgrScale )
 	SetAlpha(1)
 	
 	go_Shop_btn.Draw 	( dw - go_Shop_btn.Width, dh - go_Shop_btn.Height )
@@ -116,6 +122,8 @@ Function GameOverDraw:Void()
 	'text Coins Earned'
 	'DrawFont (textID[6] + coinsGame, 	dw/2, 100*Retina, True, 80 )
 	'White()
+
+	'DrawText(crabFinalGameOverDelay, 10, 120)
 	
 End
 
@@ -128,10 +136,44 @@ End
 
 Function GameOverUpdate:String()
 	
-	'Fall Down
+	'Go from left
 	If youX < distanceGUI
 		youX += youSpd
 		youSpd += .2*Retina
+	End
+
+	'scale stop'
+	If youX >= distanceGUI And youFinalStop = False
+
+		youScaleSpd -= .02
+		
+		youScaleX += youScaleSpd
+
+		If youScaleSpd < 0 And youScaleX < 1.0
+
+			youFinalStop = True
+			youScaleX = 1.0
+
+		End
+
+	End
+
+	If progressBgrScaleStop = False
+
+		progressBgrScaleSpd -= .006
+
+		progressBgrScale += progressBgrScaleSpd
+
+		If progressBgrScale < 1.0 And progressBgrScaleSpd < 0
+
+			progressBgrScaleStop = True
+			progressBgrScale = 1.0
+
+			youX = -progressYou.Width() * 2
+			youFinalStop = False
+
+		End
+
 	End
 
 	If go_Shop_btn.Pressed()
@@ -179,6 +221,8 @@ Global crabAnimSpd:Float
 Global crabAnimAcceleration:Float
 Global crabAnimScale:Float = .112
 
+Global crabFinalGameOverDelay:Int
+
 Function CrabAnimationInit:Void()
 	
 	crabAnimImg = LoadImage ( "hero/finish" + loadadd + ".png" )
@@ -200,7 +244,7 @@ Function CrabAnimationDraw:Void()
 
 	If alive = False
 		DrawImage( crabAnimImg, crabAnimX, crabAnimY, 0, 1.112 - crabAnimScale, 0.888 + crabAnimScale )
-		DrawDistanceOnTheCrab( crabAnimX + crabAnimImg.Width() * .04, crabAnimY + crabAnimImg.Height() * .25 )
+		DrawDistanceOnTheCrab( crabAnimX + crabAnimImg.Width() * .16, crabAnimY + crabAnimImg.Height() * .25 )
 	End
 
 End
@@ -235,6 +279,11 @@ Function CrabAnimationUpdate:Void()
 			
 			'final game over'
 			If (crabAnimY = crabAnimYend And GameOverMode = False) Or DistanceDidNotBecomeBetter()
+				If crabFinalGameOverDelay = 0 crabFinalGameOverDelay = Millisecs()
+			End
+
+			'delay to final final gameover'
+			If  Millisecs() > crabFinalGameOverDelay + 700 And crabFinalGameOverDelay > 0
 				GameOverInit()
 			End
 			
@@ -274,7 +323,7 @@ Function CrabPreviousDraw:Void()
 	If crabPreviousDraw
 
 		DrawImage ( crabPreviousImg, crabPreviousX, crabPreviousY )
-		DrawDistanceOnTheCrab( crabPreviousX + crabPreviousImg.Width() * .55, crabPreviousY + crabPreviousImg.Height() * .25, True )
+		DrawDistanceOnTheCrab( crabPreviousX + crabPreviousImg.Width() * .65, crabPreviousY + crabPreviousImg.Height() * .25, True )
 
 	End
 
@@ -323,7 +372,7 @@ Function DrawDistanceOnTheCrab:Void(theX:Int, theY:Int, theLast:Bool = False)
 
 	Local distStr:String = String(dist/10) + "m"
 
-	DrawFont( distStr, theX, theY, False, 100, 10.0 * Retina )
+	DrawFont( distStr, theX, theY, True, 100, 10.0 * Retina )
 
 End
 

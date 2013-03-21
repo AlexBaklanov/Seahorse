@@ -29,7 +29,7 @@ Class heroClass
 	Field x:Float, y:Float, xConcerningToHero:Float, yConcerningToHero:Float, xConcerningToMask:Float, yConcerningToMask:Float
 	
 	Field force:Float, jump:Float, runOut:Float, isSwim:Bool, blinkCount:Int = 100
-	Field Width:Int, Height:Int, upperBoundary:Int
+	Field Width:Int, Height:Int, upperBoundary:Int, lowerBoundary:Int, isBoundaryReached:Bool
 
 	Field img:Image, tiredBubble:Image
 	Field mask:Image, oxygen:Image, maskX:Float, maskY:Float, maskRot:Int, oxygenX:Float, oxygenY:Float, oxygenRot:Int
@@ -68,7 +68,9 @@ Class heroClass
 
 		heroScl = 1.0
 
+		lowerBoundary = dh - 10*Retina
 		upperBoundary = 0
+		isBoundaryReached = False
 
 		alive = True
 		
@@ -77,38 +79,60 @@ Class heroClass
 
 	End
 
+	'd8888b. d8888b.  .d8b.  db   d8b   db 
+	'88  `8D 88  `8D d8' `8b 88   I8I   88 
+	'88   88 88oobY' 88ooo88 88   I8I   88 
+	'88   88 88`8b   88~~~88 Y8   I8I   88 
+	'88  .8D 88 `88. 88   88 `8b d8'8b d8' 
+	'Y8888D' 88   YD YP   YP  `8b8' `8d8'  
+
 	Method Draw:Void()
+
+		TiredBubbleDraw()
+		FriendDraw()
+		HeroDraw()
+
+		MaskDraw()
+		OxygenDraw()
+
+		DrawKick()
+
+		DrawWeapons()
+
+		'DrawText(force, 10,70)
+		'DrawText(distanceLast, 10,90)
+		
+	End
+
+	Method TiredBubbleDraw:Void()
 
 		tired = 0
 		If health < 0
 			If alive DrawImage (tiredBubble, x, y - img.Height()/2 - tiredBubble.Height())
 			tired = 8
 		End
-		
-		' Draw FRIEND
+
+	End
+
+	Method FriendDraw:Void()
+
 		If friendMode
 			Local rotFriend:Int = (yConcerningToHero - y) * 4 / Retina
 			DrawImage( friendImg, x+friendHeroPositionX, y+friendHeroPositionY, rotFriend, 1, 1, Int(curFriendFrame) )
 			heroSwim = 0
 		End
-		
-		' DRAW HERO
+
+	End
+
+	Method HeroDraw:Void()
+
 		Local rotHero:Int = (yConcerningToMask - yConcerningToHero) * 3 / Retina
 		If friendMode rotHero = (yConcerningToHero - y) * 15 / Retina
 		DrawImage (img, xConcerningToHero, yConcerningToHero, rotHero + 10, heroScl, heroScl, heroSwim + blink + tired)
-		'lev1_1Bundle.Draw(xConcerningToHero, yConcerningToHero)
-		
-		' magnet
-		#rem
-		If magnetRadiusAlpha > 0
-			SetAlpha( magnetRadiusAlpha )
-			DrawImage ( magnetRadius, xConcerningToHero, yConcerningToHero, 0, Retina, Retina )
-			SetAlpha(1)
-		End
 
-		magnetRadiusAlpha -= 0.05
-		If magnetRadiusAlpha < 0 magnetRadiusAlpha = 0
-		#end
+	End
+
+	Method MaskDraw:Void()
 
 		If CurrentLevel > 1
 			If maskGlobal > 0
@@ -122,6 +146,11 @@ Class heroClass
 			End
 			If winMode = False DrawImage ( mask, maskX, maskY, maskRot, 1, 1 )
 		End
+
+	End
+
+	Method OxygenDraw:Void()
+
 		If CurrentLevel > 2
 			If oxygenGlobal > 0
 				oxygenX = xConcerningToMask
@@ -134,15 +163,15 @@ Class heroClass
 			End
 			If winMode = False DrawImage ( oxygen, oxygenX, oxygenY, oxygenRot, 1, 1 )
 		End
-
-		DrawKick()
-
-		DrawWeapons()
-
-		'DrawText(distance, 10,70)
-		'DrawText(distanceLast, 10,90)
 		
 	End
+
+	'db    db d8888b. d8888b.  .d8b.  d888888b d88888b 
+	'88    88 88  `8D 88  `8D d8' `8b `~~88~~' 88'     
+	'88    88 88oodD' 88   88 88ooo88    88    88ooooo 
+	'88    88 88~~~   88   88 88~~~88    88    88~~~~~ 
+	'88b  d88 88      88  .8D 88   88    88    88.     
+	'~Y8888P' 88      Y8888D' YP   YP    YP    Y88888P
 
 	Field disableJump:Bool
 
@@ -152,7 +181,42 @@ Class heroClass
 		If weaponHyperJump.active = 1 Return
 		
 		UpdateWeapons()
+
+		HandleBoundaries()
+
+		If GameOverMode = False RunOutHandle()
+
+		HandleSmoothMovements()
 		
+		If friendMode AnimateFirstShowFriend()
+
+		CheckForWeapons()
+
+		GenerateBlink()
+
+		HandleJump()
+		
+	End
+
+	Method HandleJump:Void()
+
+		If TouchHit(0) And alive And disableJump = False
+
+			jump = JUMP_FORCE * Retina
+			force = 0
+			
+			AnimateHero()
+			
+			touched = False
+
+			CreateBubblesFromHeroJump()
+
+			isBoundaryReached = False
+
+		End
+
+		If isBoundaryReached Return
+
 		y += force - jump
 		force += gravity
 		
@@ -167,45 +231,67 @@ Class heroClass
 			End
 		End
 
-		If y > dh - 10*Retina y = dh - 10*Retina
-		If y < upperBoundary y = upperBoundary
+	End
 
-		If GameOverMode = False RunOutHandle()
+	Method HandleSmoothMovements:Void()
 
 		xConcerningToHero = x
 		If friendMode yConcerningToHero += (y - yConcerningToHero) / 2 Else yConcerningToHero = y
 			
 		xConcerningToMask += (xConcerningToHero - xConcerningToMask) / 2.5
 		yConcerningToMask += (yConcerningToHero - yConcerningToMask) / 2.5
-		
-		If friendMode AnimateFirstShowFriend()
 
-		CheckForWeapons()
+	End
 
-		GenerateBlink()
-		
-		If TouchHit(0) And alive And disableJump = False
+	Method AnimateHero:Void()
 
-			jump = JUMP_FORCE * Retina
-			force = 0
-			
-			AnimateHero()
-			
-			touched = False
-			
-			'AnimateFriend()
-			
-			'lev1_1Bundle.Play("fogRunJump")
-			'lev1_1Bundle.animType = 1
+		heroSwim = 3.9
+		isSwim = True
+				
+	End
 
-			CreateBonus(3, 0, xConcerningToHero, yConcerningToHero )
-			For Local x:Int = 0 Until 3
-				CreateBonus(9, 0, xConcerningToHero, yConcerningToHero )
-			Next
+	Method CreateBubblesFromHeroJump:Void()
+
+		CreateBonus(3, 0, xConcerningToHero, yConcerningToHero )
+		For Local x:Int = 0 Until 3
+			CreateBonus(9, 0, xConcerningToHero, yConcerningToHero )
+		Next
+
+	End
+
+	Method GenerateBlink:Void()
+
+		blinkCount -= 1
+
+		If blinkCount < 10 blink = 4
+
+		If blinkCount = 0
+
+			blinkCount = Rnd(30,100)
+			blink = 0
 
 		End
-		
+
 	End
+
+	Method HandleBoundaries:Void()
+
+		If y > dh - 10*Retina y = lowerBoundary
+		If y < upperBoundary y = upperBoundary
+
+		If isBoundaryReached = False And alive And y = lowerBoundary
+			isBoundaryReached = True
+			force = 0
+		End
+
+	End
+
+	'd8888b. d88888b .d8888. d88888b d888888b 
+	'88  `8D 88'     88'  YP 88'     `~~88~~' 
+	'88oobY' 88ooooo `8bo.   88ooooo    88    
+	'88`8b   88~~~~~   `Y8b. 88~~~~~    88    
+	'88 `88. 88.     db   8D 88.        88    
+	'88   YD Y88888P `8888Y' Y88888P    YP    
 
 	Method Reset:Void()
 
@@ -215,6 +301,13 @@ Class heroClass
 		jump = 0
 
 	End
+
+	'd8888b. d88888b d888888b d8b   db d888888b d888888b 
+	'88  `8D 88'       `88'   888o  88   `88'   `~~88~~' 
+	'88   88 88ooooo    88    88V8o 88    88       88    
+	'88   88 88~~~~~    88    88 V8o88    88       88    
+	'88  .8D 88.       .88.   88  V888   .88.      88    
+	'Y8888D' Y88888P Y888888P VP   V8P Y888888P    YP    
 
 	Method Deinit:Void()
 		
@@ -238,39 +331,15 @@ Class heroClass
 	' OTHER ==========================================================================================================='
 	' OTHER ==========================================================================================================='
 
-	' HERO ANIM'
-
-	Method AnimateHero:Void()
-
-		heroSwim = 3.9
-		isSwim = True
-				
-	End
-
-	' BLINKS'
-
-	Method GenerateBlink:Void()
-
-		blinkCount -= 1
-
-		If blinkCount < 10 blink = 4
-
-		If blinkCount = 0
-
-			blinkCount = Rnd(30,100)
-			blink = 0
-
-		End
-
-	End
+	
 
 	'Run Out of health/mask/oxygen'
 
 	Method RunOutHandle:Void()
 
-		If runOut < upgradeThe[4]*Retina
+		If runOut < upgradeThe[4] * Retina
 
-			runOut += HEALTH_RUNOUT*Retina 'time to take a unit from health/mask/oxygen'
+			runOut += HEALTH_RUNOUT * Retina 'time to take a unit from health/mask/oxygen'
 
 		Else
 
@@ -303,6 +372,7 @@ Class heroClass
 		alive = False
 		If gravity = 0 gravity = .01
 		gravity = -gravity
+		isBoundaryReached = False
 		hero.upperBoundary = -hero.Height
 		
 	End

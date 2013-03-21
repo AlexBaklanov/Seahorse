@@ -82,7 +82,7 @@ End
 
 Function StreamsDraw:Void()
 
-	DrawText(Int(streamBubbleCount), 50, 50)
+	'DrawText(Int(streamBubbleCount), 50, 50)
 
 	If isStreamActive
 

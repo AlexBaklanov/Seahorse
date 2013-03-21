@@ -299,7 +299,7 @@ Function PowersDraw:Void()
 					End
 					
 					waveBack = False
-					winSclActive = False	
+					winSclActive = False
 					isWindowShow = 0
 					powersPic.Discard()
 					Return
