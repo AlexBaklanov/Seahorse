@@ -110,7 +110,7 @@ Function GameOverDraw:Void()
 	DrawImage( progressYou, dw/2 - distGUILenght*Retina/2 + distanceGUILast, youY, 0, progressBgrScale, progressBgrScale )
 	SetAlpha(1)
 	
-	go_Shop_btn.Draw 	( dw - go_Shop_btn.Width, dh - go_Shop_btn.Height )
+	If youFinalStop And progressBgrScaleStop go_Shop_btn.Draw 	( dw - go_Shop_btn.Width, dh - go_Shop_btn.Height )
 	
 	'text "You need some rest"
 	DrawFont( textID[5], 			dw/2, 30*Retina, True )
@@ -153,6 +153,7 @@ Function GameOverUpdate:String()
 
 			youFinalStop = True
 			youScaleX = 1.0
+			AAPublishingShowAd()
 
 		End
 
@@ -233,6 +234,8 @@ Function CrabAnimationInit:Void()
 
 	crabAnimSpd = 14.0 * Retina
 	crabAnimAcceleration = .7 * Retina
+
+	crabFinalGameOverDelay = 0
 
 End
 

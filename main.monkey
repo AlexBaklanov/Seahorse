@@ -18,6 +18,11 @@ Class GameGW Extends App
 		End
 		
 		Method OnUpdate()
+
+			If AAPublishingIsAdShown() 
+				PauseInit()
+				Return
+			End
 		
 			WindowsUpdate()
 			If windowActive Return
@@ -93,7 +98,7 @@ Class GameGW Extends App
 			
 			DrawBubbles()
 			
-			'DrawText(mainState[220..290], 10, 10)
+			'DrawText(Int(alive), 10, 10)
 			
 			'If LoadingProcess = True DrawImage (loading, cx(240), cy(160))
 			White()
@@ -128,6 +133,13 @@ Class GameGW Extends App
 			'        DrawRect(380, 220, 100, 100)
 			'        SetAlpha(1)
 			'Endif
+
+		End
+
+		Method OnSuspend()
+
+			AAPUblishingOnSuspend()
+			PauseInit()
 
 		End
 

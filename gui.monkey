@@ -5,8 +5,8 @@ Import imp
 Function GUIInit:Void()
 
 	HealthInit()
-	PauseInit()
 	DistanceInit()
+	pause_btn.Init("", "gameGUI/pause")
 	
 End
 
@@ -24,7 +24,7 @@ End
 Function GUIDeinit:Void()
 
 	HealthDeinit()
-	PauseDeinit()
+	pause_btn.Deinit()
 	
 End
 
@@ -192,19 +192,23 @@ Global pauseMode:Bool
 'INIT'
 Function PauseInit:Void()
 
-	pause_btn.Init("", "gameGUI/pause")
+	If pauseMode = False And Mode = Game And alive
 
-	pause_Resume_btn.Init("Resume")
-	pause_Menu_btn.Init("End the game")
+		pauseMode = True
 
-	pausePolyPoints = [ Float(dw)/2 - 70*Retina, 
-							Float(dh)/2 - 70*Retina, 
-							Float(dw)/2 + 60*Retina, 
-							Float(dh)/2 - 60*Retina, 
-							Float(dw)/2 + 80*Retina, 
-							Float(dh)/2 + 60*Retina, 
-							Float(dw)/2 - 75*Retina, 
-							Float(dh)/2 + 70*Retina ]
+		pause_Resume_btn.Init("Resume")
+		pause_Menu_btn.Init("End the game")
+
+		pausePolyPoints = [ Float(dw)/2 - 70*Retina, 
+								Float(dh)/2 - 70*Retina, 
+								Float(dw)/2 + 60*Retina, 
+								Float(dh)/2 - 60*Retina, 
+								Float(dw)/2 + 80*Retina, 
+								Float(dh)/2 + 60*Retina, 
+								Float(dw)/2 - 75*Retina, 
+								Float(dh)/2 + 70*Retina ]
+
+	End
 
 End
 
@@ -237,7 +241,9 @@ End
 
 Function PauseUpdate:String()
 
-	If pause_Resume_btn.Pressed() pauseMode = False
+	If pause_Resume_btn.Pressed()
+		PauseDeinit()
+	End
 
 	If pause_Menu_btn.Pressed()
 
@@ -260,7 +266,8 @@ End
 
 Function PauseDeinit:Void()
 
-	pause_btn.Deinit()
+	pauseMode = False
+
 	pause_Resume_btn.Deinit()
 	pause_Menu_btn.Deinit()
 

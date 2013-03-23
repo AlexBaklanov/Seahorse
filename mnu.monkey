@@ -10,6 +10,8 @@ Global levelPlay:Buttons[5]
 
 Global shopMenuBtn:Buttons = New Buttons
 
+Global shopMoreGames:Buttons = New Buttons
+
 Global playSurvivalBtn := New Buttons
 
 Global reset_btn:Buttons = New Buttons
@@ -48,6 +50,8 @@ Class menuClass
 		'tempAnim.sclX = 1
 		'tempAnim.sclY = 1
 		'tempAnim.animType = 0
+
+		shopMoreGames.Init("More Games")
 
 	End
 
@@ -107,6 +111,12 @@ Class menuClass
 
 		End
 
+		If shopMoreGames.Pressed()
+
+			AAPublishingShowMoreGames()
+
+		End
+
 		If winResult = 1
 
 			winResult = 0
@@ -151,6 +161,8 @@ Class menuClass
 
 		If CurrentLevel < 4	shopMenuBtn.Draw( dw/2 - shopMenuBtn.Width/2, dh - shopMenuBtn.Height )
 
+		shopMoreGames.Draw(0, 0)
+
 		'tempAnim.Draw(dw/2, dh/2)
 
 		'DrawText(menuPerces.thpath, 10,10)
@@ -168,6 +180,7 @@ Class menuClass
 		menuPerces.Deinit()
 
 		shopMenuBtn.Deinit()
+		shopMoreGames.Deinit()
 
 		playSurvivalBtn.Deinit()
 

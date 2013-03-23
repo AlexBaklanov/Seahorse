@@ -43,11 +43,13 @@ Class mainGameClass
 		bonuses.Init()
 		obstacles.Init()
 
-		StreamsInit()
+		'StreamsInit()
 		IndicatorsInit()
 		SpeedInit()
 
 		WeaponInit()
+
+		AAPublishingCacheInterstitialAds()
 
 	End
 
@@ -70,7 +72,7 @@ Class mainGameClass
 		If pauseMode Return PauseUpdate()
 		If winMode Return WinUpdate()
 
-		If pause_btn.Pressed() pauseMode = True
+		If pause_btn.Pressed() PauseInit()
 
 		NextLevelAreaInit()
 
@@ -82,7 +84,7 @@ Class mainGameClass
 		bonuses.Update()
 		obstacles.Update()
 
-		StreamsUpdate()
+		'StreamsUpdate()
 
 		FriendUpdate()
 		CrabPreviousUpdate()
@@ -131,7 +133,7 @@ Class mainGameClass
 
 		FriendMeetingDraw()
 
-		StreamsDraw()
+		'StreamsDraw()
 		
 		GUIDraw()
 
@@ -215,7 +217,7 @@ Class mainGameClass
 		obstacles.Deinit()
 		hero.Deinit()
 		
-		StreamsDeinit()
+		'StreamsDeinit()
 		
 		'fireBtn.Deinit()
 		
