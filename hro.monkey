@@ -215,7 +215,7 @@ Class heroClass
 
 		End
 
-		If isBoundaryReached Return
+		If isBoundaryReached Or pauseMode Return
 
 		y += force - jump
 		force += gravity

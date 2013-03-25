@@ -1,5 +1,6 @@
 Import mojo
 Import os
+Import brl.gamecenter
 'Import iosLib
 'Import iap
 'Import utils
@@ -29,3 +30,4 @@ Import bgr
 Import txt
 Import strm
 Import atl
+Import gmc

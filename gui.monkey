@@ -149,14 +149,6 @@ Function DrawDistance:Void()
 
 End
 
-Function DistanceDidNotBecomeBetter:Bool()
-
-	If distance < distanceLast Return True
-
-	Return False
-
-End
-
 ' .o88b.  .d88b.  d888888b d8b   db .d8888. 
 'd8P  Y8 .8P  Y8.   `88'   888o  88 88'  YP 
 '8P      88    88    88    88V8o 88 `8bo.   

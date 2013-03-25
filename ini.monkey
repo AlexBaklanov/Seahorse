@@ -67,7 +67,9 @@ Function InitIOS:Void()
 	target = "ios"
 	GameCenterTrue = True
 
+	'IOS Modules'
 	AAPublishingInit()
+	GameCenterInit()
 	
 	#rem
 	If GameCenterTrue = True And IsGameCenterAvailable() InitializeGameCenter()

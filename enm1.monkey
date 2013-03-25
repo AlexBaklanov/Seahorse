@@ -65,7 +65,7 @@ Class enemyClass
 		sclX = Rnd( Float(enemyScale[theType][6..9]), Float(enemyScale[theType][12..15]) )
 		sclY = sclX
 		spd = Rnd( Float(enemySpeed[theType][6..9]), Float(enemySpeed[theType][12..15]) )
-		anim = Rnd( Int(enemySpeed[theType][5..7]), Int(enemySpeed[theType][8..10]) )
+		anim = Rnd( Int(enemyAnim[theType][5..7]), Int(enemyAnim[theType][8..10]) )
 		rotSpeed = Rnd(-enemyRotSpeed[theType], enemyRotSpeed[theType])
 		damage = enemyDamage[theType]
 		yMove = Rnd(-enemyYMove[theType], enemyYMove[theType])

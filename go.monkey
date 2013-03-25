@@ -259,7 +259,7 @@ Function CrabAnimationUpdate:Void()
 		If alive
 
 			CrabAnimationInit()
-			StreamDeactivate()
+			'StreamDeactivate()
 			hero.PrepareForGameOver()
 			
 		End
@@ -281,7 +281,7 @@ Function CrabAnimationUpdate:Void()
 			End
 			
 			'final game over'
-			If (crabAnimY = crabAnimYend And GameOverMode = False) Or DistanceDidNotBecomeBetter()
+			If crabAnimY = crabAnimYend And GameOverMode = False
 				If crabFinalGameOverDelay = 0 crabFinalGameOverDelay = Millisecs()
 			End
 
@@ -289,6 +289,8 @@ Function CrabAnimationUpdate:Void()
 			If  Millisecs() > crabFinalGameOverDelay + 700 And crabFinalGameOverDelay > 0
 				GameOverInit()
 			End
+
+			If DistanceDidNotBecomeBetter() GameOverInit()
 			
 		End
 		
@@ -299,6 +301,14 @@ End
 Function CrabAnimationDeinit:Void()
 
 	crabAnimImg.Discard()
+
+End
+
+Function DistanceDidNotBecomeBetter:Bool()
+
+	If distance < distanceLast Return True
+
+	Return False
 
 End
 

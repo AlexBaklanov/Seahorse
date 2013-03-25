@@ -31,6 +31,8 @@ Class GameGW Extends App
 				WaitALittle -= 1
 				Return
 			End
+
+			If isGCShown() Return
 			
 			If KeyHit(KEY_F1) And KeyHit(KEY_SPACE)
 				If coords = True coords = False Else coords = True
