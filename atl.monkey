@@ -3,14 +3,16 @@ Strict
 Import imp
 
 Class atlasClass
-
-	Field xStart:Int[128], yStart:Int[128], width:Int[128], height:Int[128]
-	Field img:Image, thpath:String
+	
+	Field x:Float[10], y:Float[10]
+	Field xStart:Int[10], yStart:Int[10], w:Int[10], h:Int[10], pivotX:Int[10], pivotY:Int[10]
+	Field img:Image[10], _img:Image, thpath:String
+	Field cnt:Int, num:Int[10]
 
 	Method Load:Void(path:String)
 
 		'load image atlas'
-		img = LoadImage( path )
+		_img = LoadImage( path )
 
 		thpath = path
 
@@ -18,15 +20,15 @@ Class atlasClass
 		Local correctPath:Int = 4
 		Local retinaValue:Int = 1
 
-		If path.Contains("@p") 
+		If path.Contains("@p")
 			retinaValue = 2
 			correctPath = 6
 		End
-		If path.Contains("@2x") 
+		If path.Contains("@2x")
 			retinaValue = 2
 			correctPath = 7
 		End
-		If path.Contains("@2x@2x") 
+		If path.Contains("@2x@2x")
 			retinaValue = 4
 			correctPath = 10
 		End
@@ -36,7 +38,7 @@ Class atlasClass
 		Local tempData:String = app.LoadString( path[ ..path.Length() - correctPath ] + ".txt" )
 
 		'atlas images enumerator'
-		Local imageNumber:Int = 0
+		Local imgNum:Int = 0
 
 		'read data from txt'
 		For Local rectLine:String = EachIn tempData.Split("~n")
@@ -45,33 +47,51 @@ Class atlasClass
 
 				Select rectValue[0..1]
 
-					Case "x" xStart[imageNumber] = Int(rectValue[1..])*retinaValue
+					Case "x" xStart[imgNum] = Int(rectValue[1..])*retinaValue
 
-					Case "y" yStart[imageNumber] = Int(rectValue[1..])*retinaValue
+					Case "y" yStart[imgNum] = Int(rectValue[1..])*retinaValue
 
-					Case "w" width[imageNumber] = Int(rectValue[1..])*retinaValue - xStart[imageNumber]
+					Case "w" w[imgNum] = Int(rectValue[1..])*retinaValue - xStart[imgNum]
 
-					Case "h" height[imageNumber] = Int(rectValue[1..])*retinaValue - yStart[imageNumber]
+					Case "h" h[imgNum] = Int(rectValue[1..])*retinaValue - yStart[imgNum]
+
+					'pivot x'
+					Case "i" pivotX[imgNum] = Int(rectValue[1..])*retinaValue
+
+					'pivot y'
+					Case "j" pivotY[imgNum] = Int(rectValue[1..])*retinaValue
 
 				End
 
 			Next
 
-			imageNumber += 1
+			img[imgNum] = _img.GrabImage(xStart[imgNum], yStart[imgNum], w[imgNum], h[imgNum])
+			img[imgNum].SetHandle( pivotX[imgNum], pivotY[imgNum] )
+
+			imgNum += 1
 
 		Next
+
+		cnt = imgNum
+
+		'_img.Discard()
 
 	End
 
 	Method Draw:Void( theNum:Int, theX:Float, theY:Float, theRotation:Float = 0.0, theScaleX:Float = 1.0, theScaleY:Float = 1.0 )
 
-		DrawImageRect(img, theX, theY, xStart[theNum], yStart[theNum], width[theNum], height[theNum], theRotation, theScaleX, theScaleY)
+		DrawImage(img[theNum], theX, theY, theRotation, theScaleX, theScaleY)
+
+		num[theNum] = theNum
+
+		x[num[theNum]] = theX
+		y[num[theNum]] = theY
 
 	End
 
 	Method Deinit:Void()
 
-		img.Discard()
+		_img.Discard()
 
 	End
 

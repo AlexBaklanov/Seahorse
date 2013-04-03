@@ -137,13 +137,13 @@ Class menuClass
 		'DrawImage ( menuPerc[2], dw - menuPerc[2].Width() + swimPerc, 		-5 - swimPerc,						swimPerc/5, 1,1 )
 		'DrawImage ( menuPerc[3], dw - menuPerc[3].Width() + swimPerc, 		dh - menuPerc[3].Height() + swimPerc, swimPerc/5, 1,1 )
 
-		menuPerces.Draw(0, 	-5 - swimPerc, 								dh - menuPerces.height[0] + swimPerc, 		swimPerc/5)
-		menuPerces.Draw(1, 	dw - menuPerces.width[1] + swimPerc, 		-5 - swimPerc,								swimPerc/5)
-		menuPerces.Draw(2, 	dw - menuPerces.width[2] + swimPerc, 		dh - menuPerces.height[2] + swimPerc, 		swimPerc/5)
+		menuPerces.Draw(0, 	-5 - swimPerc, 							dh - menuPerces.h[0] + swimPerc, 		swimPerc/5)
+		menuPerces.Draw(1, 	dw - menuPerces.w[1] + swimPerc, 		-5 - swimPerc,							swimPerc/5)
+		menuPerces.Draw(2, 	dw - menuPerces.w[2] + swimPerc, 		dh - menuPerces.h[2] + swimPerc, 		swimPerc/5)
 
 		reset_btn.Draw( dw - reset_btn.Width, dh/3*2 )
 
-		DrawFont( "v0.28", 10*Retina, 10*Retina, False, 50 )
+		DrawFont( "v0.28", 10 * Retina, 10 * Retina, False, 50 )
 
 		If CurrentLevel = 4
 

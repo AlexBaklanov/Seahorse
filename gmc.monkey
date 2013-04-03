@@ -2,12 +2,16 @@ Strict
 
 Import imp
 
+Global gameCenterLeaderboardsBtn := New Buttons
+Global gameCenterAchievementsBtn := New Buttons
 
 Global gameCenterHandle:GameCenter
 
-Const gameCenterLeaderBoardID1:String = ""
+Const gameCenterLeaderBoardBestDistance:String = "com.whitezebra.tutling.bestdistanceinonegame"
 Const gameCenterLeaderBoardID2:String = ""
 Const gameCenterLeaderBoardID3:String = ""
+
+Const gameCenterAchievementID00:Sring = "com.whitezebra.turtling.a00"
 
 Function GameCenterInit:Void()
 

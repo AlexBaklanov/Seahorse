@@ -1,6 +1,8 @@
 Import mojo
 Import os
+#If TARGET="ios"
 Import brl.gamecenter
+#EndIf
 'Import iosLib
 'Import iap
 'Import utils

@@ -32,7 +32,9 @@ Class GameGW Extends App
 				Return
 			End
 
+			#If TARGET="ios"
 			If isGCShown() Return
+			#Endif
 			
 			If KeyHit(KEY_F1) And KeyHit(KEY_SPACE)
 				If coords = True coords = False Else coords = True

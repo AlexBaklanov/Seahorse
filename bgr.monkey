@@ -36,7 +36,7 @@ Function BackgroundInit:Void()
 	currentBgrMiddle = Rnd(0,10)
 	bgrXmiddle = dw+bgrMiddleImg.Width()
 
-	bgrXactual = bgr.width[0] / 2
+	bgrXactual = bgr.w[0] / 2
 		
 End
 
@@ -45,8 +45,8 @@ Function BackgroundUpdate:Void()
 	bgrXactual -= speed*Retina * globalSpeed / 4.0
 	bgrXbottom -= speed*Retina * globalSpeed
 
-	If bgrXactual < - bgr.width[0]*retinaScl	bgrXactual += bgr.width[0]*retinaScl
-	If bgrXbottom < - bgr.width[1]*retinaScl	bgrXbottom += bgr.width[1]*retinaScl
+	If bgrXactual < - bgr.w[0]*retinaScl	bgrXactual += bgr.w[0]*retinaScl
+	If bgrXbottom < - bgr.w[1]*retinaScl	bgrXbottom += bgr.w[1]*retinaScl
 		
 	bgrXmiddle -= speed*Retina * globalSpeed / 2.0
 	If bgrXmiddle < -bgrMiddleImg.Width()*retinaScl
@@ -63,13 +63,13 @@ Function BackgroundDraw:Void()
 	
 	'background main 0'
 	bgr.Draw(0, bgrXactual, 							0, 0, retinaScl, retinaScl)
-	bgr.Draw(0, bgrXactual + bgr.width[0]*retinaScl,	0, 0, retinaScl, retinaScl)
+	bgr.Draw(0, bgrXactual + bgr.w[0]*retinaScl,	0, 0, retinaScl, retinaScl)
 	
 	DrawImage(bgrMiddleImg, bgrXmiddle, dh, 0, retinaScl, retinaScl, currentBgrMiddle)
 	
 	'background bottom 1'
-	bgr.Draw(1, bgrXbottom, 							dh - bgr.height[1]*retinaScl, 	0, retinaScl, retinaScl)
-	bgr.Draw(1, bgrXbottom + bgr.width[1]*retinaScl,	dh - bgr.height[1]*retinaScl, 	0, retinaScl, retinaScl)
+	bgr.Draw(1, bgrXbottom, 							dh - bgr.h[1]*retinaScl, 	0, retinaScl, retinaScl)
+	bgr.Draw(1, bgrXbottom + bgr.w[1]*retinaScl,	dh - bgr.h[1]*retinaScl, 	0, retinaScl, retinaScl)
 
 End
 

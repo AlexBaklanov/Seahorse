@@ -49,7 +49,7 @@ Function InitIOS:Void()
 		retinaScl = 1
 	Elseif DeviceWidth()=960
 		Retina = 2
-		loadadd = ""
+		loadadd = "@2x"
 		retinaStr = "@p"
 		retinaScl = 1
 	Elseif DeviceWidth()=1024
@@ -59,7 +59,7 @@ Function InitIOS:Void()
 		retinaScl = 1
 	Elseif DeviceWidth()=2048
 		Retina = 4
-		loadadd = "@2x"
+		loadadd = "@2x@2x"
 		retinaStr = "@p"
 		retinaScl = 2
 	Endif
