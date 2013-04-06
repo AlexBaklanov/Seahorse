@@ -215,39 +215,35 @@ End
 	'Y8b  d8 88 `88. 88   88 88   8D db   8D 
 	' `Y88P' 88   YD YP   YP Y8888P' `8888Y' 
 
-Global crabAnimImg:Image
-Global crabAnimY:Float
-Global crabAnimYend:Int
-Global crabAnimSpd:Float
-Global crabAnimAcceleration:Float
-Global crabAnimScale:Float = .112
+
+Global crabAnim := New animClass
+Global crabImg := New atlasClass
+Global crabY:Float
 
 Global crabFinalGameOverDelay:Int
 
-Function CrabAnimationInit:Void()
-	
-	crabAnimImg = LoadImage ( "hero/finish" + loadadd + ".png" )
-	crabAnimImg.SetHandle( crabAnimImg.Width()/2, 0 )
-	
-	crabAnimY = dh + 10 * Retina
-	crabAnimYend = dh - crabAnimImg.Height()
+Global crabAnimStarted:Bool
 
-	crabAnimSpd = 14.0 * Retina
-	crabAnimAcceleration = .7 * Retina
+Function CrabAnimationInit:Void()
 
 	crabFinalGameOverDelay = 0
+	crabAnimStarted = False
+	crabAnim.Stop()
 
 End
 
 Function CrabAnimationDraw:Void()
 
-	'DrawText (crabAnimScale, 100, 10)
+	DrawText (globalSpeed, 100, 10)
 
-	Local crabAnimX:Int = hero.x + 60 * Retina
+	Local crabX:Int = hero.x + 60 * Retina
+	
+	If alive = False 
 
-	If alive = False
-		DrawImage( crabAnimImg, crabAnimX, crabAnimY, 0, 1.112 - crabAnimScale, 0.888 + crabAnimScale )
-		DrawDistanceOnTheCrab( crabAnimX + crabAnimImg.Width() * .16, crabAnimY + crabAnimImg.Height() * .25 )
+		crabAnim.Draw(crabX + crb * 2, crabY - crb * 2 )
+
+		If crabFinalGameOverDelay > 0 DrawDistanceOnTheCrab( crabAnim.img.x[2], crabAnim.img.y[2] - 60 * Retina )
+
 	End
 
 End
@@ -259,29 +255,22 @@ Function CrabAnimationUpdate:Void()
 		If alive
 
 			CrabAnimationInit()
-			'StreamDeactivate()
 			hero.PrepareForGameOver()
 			
 		End
 		
-		If globalSpeed < 0 globalSpeed = 0
+		If globalSpeed < 0
+
+			globalSpeed = 0
+			crabAnim.Play(ONE_SHOT)
+			crabAnimStarted = True
+			acceleration = 0
+
+		End
 		
 		If globalSpeed = 0
 
-			'hard to understand scale-speed-position abrah-cadabrah with Crab's animation
-			crabAnimY -= crabAnimSpd
-			crabAnimSpd -= crabAnimAcceleration
-			crabAnimScale = crabAnimSpd / 50.0 / Retina
-
-			If crabAnimAcceleration > 0 And crabAnimY > crabAnimYend And crabAnimSpd < 0 crabAnimAcceleration = -crabAnimAcceleration
-			
-			If crabAnimY < crabAnimYend And crabAnimAcceleration < 0
-				crabAnimY = crabAnimYend
-				crabAnimScale = .112
-			End
-			
-			'final game over'
-			If crabAnimY = crabAnimYend And GameOverMode = False
+			If crabAnim.Stopped() And GameOverMode = False
 				If crabFinalGameOverDelay = 0 crabFinalGameOverDelay = Millisecs()
 			End
 
@@ -296,11 +285,13 @@ Function CrabAnimationUpdate:Void()
 		
 	End
 
+	crabAnim.Update()
+
 End
 
 Function CrabAnimationDeinit:Void()
 
-	crabAnimImg.Discard()
+	crabAnim.Deinit()
 
 End
 
@@ -319,6 +310,10 @@ Global crabPreviousDraw:Bool
 Global crabPreviousHideY:Int
 
 Function CrabPreviousInit:Void()
+
+	crabImg.Load("hero/crab/img" + loadadd + ".png" ) 
+	crabAnim.Init("hero/crab/", crabImg)
+	crabY = dh + 5 * Retina
 
 	crabPreviousImg = LoadImage ( "hero/finish" + loadadd + ".png" )
 

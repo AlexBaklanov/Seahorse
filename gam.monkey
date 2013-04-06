@@ -384,17 +384,21 @@ End
 
 Function SpeedUpdate:Void()
 
-	distance += speed * globalSpeed
-	globalSpeed += acceleration
+		distance += speed * globalSpeed
+		globalSpeed += acceleration
 
-	If globalSpeed > speedMax
-		globalSpeed = speedMax
-	End
+		If globalSpeed > speedMax
+			globalSpeed = speedMax
+		End
 
-	If globalSpeed = speedMax
-		acceleration = 0
-	Else
-		acceleration = upgradeThe[1]
+	If alive
+
+		If globalSpeed = speedMax
+			acceleration = 0
+		Else
+			acceleration = upgradeThe[1]
+		End
+
 	End
 
 	If friendMode
@@ -421,7 +425,7 @@ Function SpeedUpdate:Void()
 
 	End
 
-	If alive = False acceleration = -.008
+	If alive = False And crabAnimStarted = False acceleration = -.008
 
 End
 
