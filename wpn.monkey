@@ -1643,7 +1643,7 @@ Class weaponCamouflageClass
 		cur = validEnemies[0]
 		
 		For Local en := Eachin enemy
-			If en.theType = cur
+			If en.type = cur
 				img = en.img
 				Exit
 			End

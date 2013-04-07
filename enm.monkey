@@ -53,7 +53,7 @@ Class enemiesClass
 					Case 1, 8, 9, 11, 14, 16, 19, 22, 24, 27, 28, 30
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 3, Image.MidHandle)
 
-					Case 6, 7, 15, 23, 21
+					Case 7, 15, 23, 21
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 4, Image.MidHandle)
 
 					Case 3, 10, 12, 26
@@ -65,13 +65,16 @@ Class enemiesClass
 					Case 17
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 100*Retina, 100*Retina, 8, Image.MidHandle)
 
-					Case 2
-						enemyImg[2] = New atlasClass
-						enemyImg[2].Init("enemies/enemy02/img" + loadadd + ".png")
+					Case 2, 6
 
-						enemyFrm[2] = New framesClass
-						enemyFrm[2].Init("enemies/enemy02/")
-						Print "img: " + enemyImg[2].cnt
+
+
+						enemyImg[enm] = New atlasClass
+						enemyImg[enm].Init("enemies/enemy" + zeroAdd + "" + enm + "/img" + loadadd + ".png")
+
+						enemyFrm[enm] = New framesClass
+						enemyFrm[enm].Init("enemies/enemy" + zeroAdd + "" + enm + "/")
+						Print "img: " + enemyImg[enm].cnt
 					
 					Default
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 1, Image.MidHandle)

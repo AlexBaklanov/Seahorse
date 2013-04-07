@@ -49,7 +49,7 @@ Class enemyClass
 	Field swimX:Float, swimForce:Float, swimNegPosRnd:Int
 	Field rot:Float, rotSpeed:Float, rotTo:Int
 	Field sclX:Float, sclY:Float, sclStart:Float
-	Field spd:Float, img:Image, theType:Int, theVar:Int, fixedSpeed:Bool
+	Field spd:Float, img:Image, type:Int, theVar:Int, fixedSpeed:Bool
 	Field damage:Int
 	Field catched:Bool, kicked:Bool, burned:Bool, lightned:Bool
 	Field anim:Float, frame:Int, animSpd:Float, isFlee:Bool
@@ -59,9 +59,9 @@ Class enemyClass
 
 	Field enemyAnim:animClass
 
-	Method Init:Void(type:Int, nextVar:Int = 0)
+	Method Init:Void(theType:Int, nextVar:Int = 0)
 
-			theType = type
+			type = theType
 			img = enemies.img[type]
 			radius = 1
 
@@ -75,7 +75,7 @@ Class enemyClass
 			yMove = Rnd(-enemyYMove[theType], enemyYMove[theType])
 
 
-		If type <> 2
+		If type <> 2 And type <> 6
 
 			x = dw + img.Width()
 			y = Rnd(0,dh)
@@ -84,17 +84,23 @@ Class enemyClass
 
 		End
 
-		Select theType
+		Local zeroAdd:String
+		If type < 10 zeroAdd = "0" Else zeroAdd = ""
 
-			Case 2
+		Select type
+
+			Case 2, 6
+
 				enemyAnim = New animClass
-				enemyAnim.Init("enemies/enemy02/", enemyImg[2], enemyFrm[2])
+				enemyAnim.Init("enemies/enemy" + zeroAdd + "" + type + "/", enemyImg[type], enemyFrm[type])
 				enemyAnim.Play(LOOP)
 				xMove = -.2
 				w = enemyAnim.img.w[0]
 				h = enemyAnim.img.h[0]
 				x = dw + w
 				y = Rnd(0,dh)
+				pivotX = enemyAnim.partX[0]
+				pivotY = enemyAnim.partY[0]
 
 			'one legged crab'
 			Case 3
@@ -116,11 +122,11 @@ Class enemyClass
 				y = Rnd(dh/5,dh + dh/5)
 
 			'blue back eyed shell'
-			Case 6
-				rot = 0
-				sclStart = sclX
-				yForce = 1
-				radius = .6
+			'Case 6
+			''	rot = 0
+			''	sclStart = sclX
+			''	yForce = 1
+			''	radius = .6
 			
 			'jewel shell'
 			Case 7
@@ -269,19 +275,21 @@ Class enemyClass
 
 	Method Draw:Void()
 
-		If theType = 2
+		Select type
 
-			enemyAnim.Draw(x ,y)
+			Case 2, 6
 
-		Else
+				enemyAnim.Draw(x, y)
 
-			If burned SetColor(120,120,120)
-			DrawImage( img, x, y, rot, sclX, sclY, frame )
-			If burned White()
+			Default
+
+				If burned SetColor(120,120,120)
+				DrawImage( img, x, y, rot, sclX, sclY, frame )
+				If burned White()
 
 		End
 		
-		If enemyRadiusEnabled SetAlpha(.2) DrawCircle (pivotX,pivotY,img.Width()/2*radius*sclX) SetAlpha(1)
+		If enemyRadiusEnabled SetAlpha(.2) DrawCircle (pivotX,pivotY,w/2*radius*sclX) SetAlpha(1)
 		'DrawText(enemyAnm.partSclX[5], x+20, y+20)
 	End
 
@@ -305,7 +313,7 @@ Class enemyClass
 
 		If catched Return
 
-		Select theType
+		Select type
 
 			Case 1
 				
@@ -319,7 +327,7 @@ Class enemyClass
 				End
 				If anim = 0 CreateBonus(3,0,x,y)
 
-			Case 2
+			Case 2, 6
 
 				enemyAnim.Update()
 
@@ -419,6 +427,7 @@ Class enemyClass
 					bonusCount = 0
 				End
 
+			#rem
 			Case 6
 
 				Local waveHeight:Float = 1 * sclX
@@ -444,6 +453,8 @@ Class enemyClass
 						bonusCount += 1
 					End
 				End
+
+			#end
 
 
 			Case 7
