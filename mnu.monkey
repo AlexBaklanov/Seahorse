@@ -37,7 +37,7 @@ Class menuClass
 			'menuPerc[lp] = LoadImage( "menu/menuPerc0" + lp + "" + loadadd + ".png" )
 		Next
 
-		menuPerces.Load("menu/menuPerces" + loadadd + ".png")
+		menuPerces.Init("menu/menuPerces" + loadadd + ".png")
 
 		flare = LoadImage("flare.png", 1, Image.MidHandle)
 

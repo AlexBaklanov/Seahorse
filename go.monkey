@@ -234,13 +234,13 @@ End
 
 Function CrabAnimationDraw:Void()
 
-	DrawText (globalSpeed, 100, 10)
+	'DrawText (globalSpeed, 100, 10)
 
 	Local crabX:Int = hero.x + 60 * Retina
 	
 	If alive = False 
 
-		crabAnim.Draw(crabX + crb * 2, crabY - crb * 2 )
+		crabAnim.Draw( crabX, crabY )
 
 		If crabFinalGameOverDelay > 0 DrawDistanceOnTheCrab( crabAnim.img.x[2], crabAnim.img.y[2] - 60 * Retina )
 
@@ -311,7 +311,7 @@ Global crabPreviousHideY:Int
 
 Function CrabPreviousInit:Void()
 
-	crabImg.Load("hero/crab/img" + loadadd + ".png" ) 
+	crabImg.Init("hero/crab/img" + loadadd + ".png" ) 
 	crabAnim.Init("hero/crab/", crabImg)
 	crabY = dh + 5 * Retina
 

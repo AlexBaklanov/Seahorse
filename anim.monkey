@@ -6,64 +6,54 @@ Const STOP:Int = 0, LOOP:Int = 1, ONE_SHOT:Int = 2
 
 Class animClass
 
-	Field img:atlasClass
+	Field img:atlasClass, frm:framesClass
 	Field f:Int, paused:Bool
 	Field type:Int
 	Field partX:Float[10000], partY:Float[10000]
 	Field partRot:Float[10000], partSclX:Float[10000], partSclY:Float[10000]
-	Field keyFrame:Bool[941], frameCnt:Int, curFrame:Int, lastFrame:Int
+	Field keyFrameMove:Bool[941], keyFrameRot:Bool[941], keyFrameScl:Bool[941], frameCnt:Int, curFrame:Int, lastFrame:Int
 
 
-	Method Init:Void(path:String, theImg:atlasClass = Null)
+	Method Init:Void(path:String, theImg:atlasClass = Null, theFrames:framesClass = Null)
 
 		type = STOP
 
 		If theImg = Null
 			img = New atlasClass
-			img.Load(path + "img" + loadadd + ".png")
+			img.Init(path + "img" + loadadd + ".png")
 		Else
 			img = theImg
 		End
 
-		Local tempData:String = app.LoadString( path + "anim.txt" )
+		If theFrames = Null
+			frm = New framesClass
+			frm.Init( path )
+		Else
+			frm = theFrames
+		End
 
-		'atlas images enumerator'
-		Local frmNum:Int = 0
-		Local p:Int
+		'Print frm.frameCnt
 
-		'read data from txt'
-		For Local animLine:String = EachIn tempData.Split("~n")
+		For Local p:Int = 0 Until img.cnt
 
-			p = Int(animLine[1..2])
+			For Local f:Int = 0 To 940
 
-			For Local animValue:String = EachIn animLine.Split(",")
+				keyFrameMove[f] = frm.keyFrameMove[f]
+				keyFrameRot[f] = frm.keyFrameRot[f]
+				keyFrameScl[f] = frm.keyFrameScl[f]
 
-				Select animValue[0..1]
+				partX[ p + f * 10 ] = frm.partX[ p + f * 10 ]
+				partY[ p + f * 10 ] = frm.partY[ p + f * 10 ]
+				partRot[ p + f * 10 ] = frm.partRot[ p + f * 10 ]
+				partSclX[ p + f * 10 ] = frm.partSclX[ p + f * 10 ]
+				partSclY[ p + f * 10 ] = frm.partSclY[ p + f * 10 ]
 
-					Case "f"
-						f = Int(animValue[1..])
-						keyFrame[f] = True
-						lastFrame = f
-
-					Case "x" partX[ p + f * 10 ] = Int(animValue[1..]) * Retina
-
-					Case "y" partY[ p + f * 10 ] = Int(animValue[1..]) * Retina
-
-					Case "r" partRot[ p + f * 10 ] = Int(animValue[1..])
-
-					Case "s" partSclX[ p + f * 10 ] = Float(Int(animValue[1..])) / 100.0
-
-					Case "z" partSclY[ p + f * 10 ] = Float(Int(animValue[1..])) / 100.0
-
-				End
+				lastFrame = frm.lastFrame
+				frameCnt = frm.frameCnt
 
 			Next
 
-			frmNum += 1
-
 		Next
-
-		frameCnt = frmNum
 
 	End
 
@@ -129,37 +119,61 @@ Class animClass
 
 	Method CalculateCurrentFrame:Void()
 
-		If keyFrame[curFrame] Return
-
 		For Local pt:Int = 0 Until img.cnt
 
-			Local prevKey:Int = PrevKey()
-			Local nextKey:Int = NextKey()
+			If keyFrameMove[curFrame] = False
 
-			Local prev10:Int = pt + prevKey * 10
-			Local next10:Int = pt + nextKey * 10
+				Local prevKey:Int = PrevKey(kfMOVE)
+				Local nextKey:Int = NextKey(kfMOVE)
 
-			partX[pt + curFrame * 10] = 		Tween( partX[prev10], partX[next10], curFrame, prevKey, nextKey )
-			partY[pt + curFrame * 10] = 		Tween( partY[prev10], partY[next10], curFrame, prevKey, nextKey )
+				Local prev10:Int = pt + prevKey * 10
+				Local next10:Int = pt + nextKey * 10
 
-			partRot[pt + curFrame * 10] = 		Tween( partRot[prev10], partRot[next10], curFrame, prevKey, nextKey )
+				partX[pt + curFrame * 10] = 		Tween( partX[prev10], partX[next10], curFrame, prevKey, nextKey )
+				partY[pt + curFrame * 10] = 		Tween( partY[prev10], partY[next10], curFrame, prevKey, nextKey )
 
-			partSclX[pt + curFrame * 10] = 		Tween( partSclX[prev10], partSclX[next10], curFrame, prevKey, nextKey )
-			partSclY[pt + curFrame * 10] = 		Tween( partSclY[prev10], partSclY[next10], curFrame, prevKey, nextKey )
+			End
+
+			If keyFrameRot[curFrame] = False
+
+				Local prevKey:Int = PrevKey(kfROT)
+				Local nextKey:Int = NextKey(kfROT)
+
+				Local prev10:Int = pt + prevKey * 10
+				Local next10:Int = pt + nextKey * 10
+
+				partRot[pt + curFrame * 10] = 		Tween( partRot[prev10], partRot[next10], curFrame, prevKey, nextKey )
+
+			End
+
+			If keyFrameScl[curFrame] = False
+
+				Local prevKey:Int = PrevKey(kfSCL)
+				Local nextKey:Int = NextKey(kfSCL)
+
+				Local prev10:Int = pt + prevKey * 10
+				Local next10:Int = pt + nextKey * 10
+
+				partSclX[pt + curFrame * 10] = 		Tween( partSclX[prev10], partSclX[next10], curFrame, prevKey, nextKey )
+				partSclY[pt + curFrame * 10] = 		Tween( partSclY[prev10], partSclY[next10], curFrame, prevKey, nextKey )
+
+			End
 
 		End
 
 	End
 
-	Method NextKey:Int()
+	Field kfMOVE:Int = 0
+	Field kfROT:Int = 1
+	Field kfSCL:Int = 2
 
-		For Local fr:Int = curFrame To lastFrame
+	Method NextKey:Int(kfType:Int)
 
-			If keyFrame[fr]
+		For Local fr:Int = curFrame To 940
 
-				Return fr
-
-			End
+			If kfType = 0 And keyFrameMove[fr] Return fr
+			If kfType = 1 And keyFrameRot[fr] Return fr
+			If kfType = 2 And keyFrameScl[fr] Return fr
 
 		End
 
@@ -167,15 +181,13 @@ Class animClass
 
 	End
 
-	Method PrevKey:Int()
+	Method PrevKey:Int(kfType:Int)
 
 		For Local fr:Int = curFrame - 1 To 0 Step -1
 
-			If keyFrame[fr]
-
-				Return fr
-
-			End
+			If kfType = 0 And keyFrameMove[fr] Return fr
+			If kfType = 1 And keyFrameRot[fr] Return fr
+			If kfType = 2 And keyFrameScl[fr] Return fr
 
 		End
 
@@ -193,23 +205,6 @@ Class animClass
 
 		End
 
-		'DrawText(partX[curFrame*10], 10, 10)
-		'DrawText(PrevKey() + " " + NextKey(), 10, 40)
-
-		For Local fr:Int = 0 To 940
-
-		If keyFrame[fr] = True
-
-			DrawCircle( fr + 10, 630, 5 )
-
-		End
-
-	End
-
-	White()
-
-	DrawText( curFrame, curFrame + 10 - String(curFrame).Length()*8/2, 550 )
-
 	End
 
 	Method Deinit:Void()
@@ -226,9 +221,12 @@ Function Tween:Float(b:Float, e:Float, f:Float, p:Float, n:Float)
 	Local d:Float = n - p
 	Local t:Float = f - p
 
-	Return c * t / d + b
+	'Return c * t / d + b
 
-	'(-70 - -178) * 192 / 97 + -178
+	t /= d/2
+	If (t < 1) Return c/2*t*t*t + b
+	t -= 2
+	Return c/2*(t*t*t + 2) + b
 
 End
 

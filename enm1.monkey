@@ -8,7 +8,7 @@ Global rnen:Int
 Global enemyDamage:Int[31]
 Global enemySpeed:String[31]
 Global enemyScale:String[31]
-Global enemyAnim:String[31]
+Global enemyAnm:String[31]
 Global enemyRotSpeed:Float[31]
 Global enemyYMove:Float[31]
 
@@ -26,7 +26,7 @@ Function enemiesReadData:Void()
 			If enemyParam.Contains("damage") 	enemyDamage[enemyCounter] = 	Int(enemyParam[7..9])
 			If enemyParam.Contains("speed") 	enemySpeed[enemyCounter] = 		enemyParam ' For later use in Rnd'
 			If enemyParam.Contains("scale") 	enemyScale[enemyCounter] = 		enemyParam  'For later use in Rnd'
-			If enemyParam.Contains("anim") 		enemyAnim[enemyCounter] = 		enemyParam  'For later use in Rnd'
+			If enemyParam.Contains("anim") 		enemyAnm[enemyCounter] = 		enemyParam  'For later use in Rnd'
 			If enemyParam.Contains("rotspd") 	enemyRotSpeed[enemyCounter] = 	Float(enemyParam[7..11])
 			If enemyParam.Contains("ymove") 	enemyYMove[enemyCounter] = 		Float(enemyParam[6..9])
 
@@ -40,7 +40,7 @@ End
 
 Class enemyClass
 	
-	Field x:Float, y:Float
+	Field x:Float, y:Float, pivotX:Float, pivotY:Float
 
 	Field yWave:Float, xWave:Float
 	Field yForce:Int
@@ -55,23 +55,46 @@ Class enemyClass
 	Field anim:Float, frame:Int, animSpd:Float, isFlee:Bool
 	Field bonusCount:Int
 
+	Field w:Int, h:Int
+
+	Field enemyAnim:animClass
+
 	Method Init:Void(type:Int, nextVar:Int = 0)
 
-		theType = type
-		img = enemies.img[type]
-		x = dw + img.Width()
-		y = Rnd(0,dh)
-		rot = Rnd(0,360)
-		sclX = Rnd( Float(enemyScale[theType][6..9]), Float(enemyScale[theType][12..15]) )
-		sclY = sclX
-		spd = Rnd( Float(enemySpeed[theType][6..9]), Float(enemySpeed[theType][12..15]) )
-		anim = Rnd( Int(enemyAnim[theType][5..7]), Int(enemyAnim[theType][8..10]) )
-		rotSpeed = Rnd(-enemyRotSpeed[theType], enemyRotSpeed[theType])
-		damage = enemyDamage[theType]
-		yMove = Rnd(-enemyYMove[theType], enemyYMove[theType])
-		radius = 1
+			theType = type
+			img = enemies.img[type]
+			radius = 1
+
+			rot = Rnd(0,360)
+			sclX = Rnd( Float(enemyScale[theType][6..9]), Float(enemyScale[theType][12..15]) )
+			sclY = sclX
+			spd = Rnd( Float(enemySpeed[theType][6..9]), Float(enemySpeed[theType][12..15]) )
+			anim = Rnd( Int(enemyAnm[theType][5..7]), Int(enemyAnm[theType][8..10]) )
+			rotSpeed = Rnd(-enemyRotSpeed[theType], enemyRotSpeed[theType])
+			damage = enemyDamage[theType]
+			yMove = Rnd(-enemyYMove[theType], enemyYMove[theType])
+
+
+		If type <> 2
+
+			x = dw + img.Width()
+			y = Rnd(0,dh)
+			w = img.Width()
+			h = img.Height()
+
+		End
 
 		Select theType
+
+			Case 2
+				enemyAnim = New animClass
+				enemyAnim.Init("enemies/enemy02/", enemyImg[2], enemyFrm[2])
+				enemyAnim.Play(LOOP)
+				xMove = -.2
+				w = enemyAnim.img.w[0]
+				h = enemyAnim.img.h[0]
+				x = dw + w
+				y = Rnd(0,dh)
 
 			'one legged crab'
 			Case 3
@@ -245,12 +268,21 @@ Class enemyClass
 	End
 
 	Method Draw:Void()
-		If burned SetColor(120,120,120)
-		DrawImage( img, x, y, rot, sclX, sclY, frame )
-		If burned White()
+
+		If theType = 2
+
+			enemyAnim.Draw(x ,y)
+
+		Else
+
+			If burned SetColor(120,120,120)
+			DrawImage( img, x, y, rot, sclX, sclY, frame )
+			If burned White()
+
+		End
 		
-		If enemyRadiusEnabled SetAlpha(.2) DrawCircle (x,y,img.Width()/2*radius*sclX) SetAlpha(1)
-		'DrawText(enemyDamage[theType], x+20, y+20)
+		If enemyRadiusEnabled SetAlpha(.2) DrawCircle (pivotX,pivotY,img.Width()/2*radius*sclX) SetAlpha(1)
+		'DrawText(enemyAnm.partSclX[5], x+20, y+20)
 	End
 
 	Method Update:Void()
@@ -289,6 +321,12 @@ Class enemyClass
 
 			Case 2
 
+				enemyAnim.Update()
+
+				'Get center for collision'
+				pivotX = x + enemyAnim.partX[enemyAnim.curFrame * 10]
+				pivotY = y + enemyAnim.partY[enemyAnim.curFrame * 10]
+				#rem
 				anim += .2
 				If anim > 40 anim = 0
 				If anim < 4
@@ -297,6 +335,7 @@ Class enemyClass
 					frame = 0 
 					End
 				If anim = 0 CreateBonus(3,0,x,y)
+				#end
 
 			Case 3
 

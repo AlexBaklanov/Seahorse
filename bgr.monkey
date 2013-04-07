@@ -26,7 +26,7 @@ Global bgr := New atlasClass
 Function BackgroundInit:Void()
 
 	'bgr atlas'
-	bgr.Load("bgr/bgr0"+CurrentLevel+""+retinaStr+".png")
+	bgr.Init("bgr/bgr0"+CurrentLevel+""+retinaStr+".png")
 		
 	bgrMiddleImg = LoadImage( "bgr/centerPics" + CurrentLevel + "" +retinaStr+ ".png", 256 * imagesRects2x, 256 * imagesRects2x,  16 )
 	bgrMiddleImg.SetHandle( bgrMiddleImg.Width()/2, bgrMiddleImg.Height() )

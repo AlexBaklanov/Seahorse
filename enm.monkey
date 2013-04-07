@@ -8,6 +8,10 @@ Global enemies:enemiesClass = New enemiesClass
 
 Global enemiesCount:Int
 
+Global enemyImg:atlasClass[30]
+Global enemyFrm:framesClass[30]
+'Global enemyAnim:animClass[30]
+
 Global OldLevel:Int
 
 Class enemiesClass
@@ -49,7 +53,7 @@ Class enemiesClass
 					Case 1, 8, 9, 11, 14, 16, 19, 22, 24, 27, 28, 30
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 3, Image.MidHandle)
 
-					Case 2, 6, 7, 15, 23, 21
+					Case 6, 7, 15, 23, 21
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 4, Image.MidHandle)
 
 					Case 3, 10, 12, 26
@@ -60,10 +64,17 @@ Class enemiesClass
 
 					Case 17
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 100*Retina, 100*Retina, 8, Image.MidHandle)
+
+					Case 2
+						enemyImg[2] = New atlasClass
+						enemyImg[2].Init("enemies/enemy02/img" + loadadd + ".png")
+
+						enemyFrm[2] = New framesClass
+						enemyFrm[2].Init("enemies/enemy02/")
+						Print "img: " + enemyImg[2].cnt
 					
 					Default
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 1, Image.MidHandle)
-
 
 				End
 				
@@ -93,14 +104,14 @@ Class enemiesClass
 			en.Update()
 
 			'OUT of SCREEN'
-			If ( en.x < -1 * en.img.Width() ) Or ( en.y < -1 * en.img.Height() ) Or ( en.y > dh + dh * (1 - Int(en.burned)) + en.img.Width() ) Or ( en.kicked And ( en.x > dw + en.img.Width() ) )
+			If ( en.x < -1 * en.w ) Or ( en.y < -1 * en.h ) Or ( en.y > dh + dh * (1 - Int(en.burned)) + en.w ) Or ( en.kicked And ( en.x > dw + en.w ) )
 				enemy.Remove(en)
 			End
 
 			If friendMode = False And weaponCamouflage.active <> 1 And weaponHyperJump.active <> 1 And en.kicked = False And en.x < closeToHero
 
 				'COLLISION'
-				If Distance(en.x, en.y, hero.x, hero.y) < 5 * Retina + en.img.Width() * en.sclX * en.radius / 2 And en.catched = False
+				If Distance(en.pivotX, en.pivotY, hero.x, hero.y) < 5 * Retina + en.w * en.sclX * en.radius / 2 And en.catched = False
 					
 					If en.kicked
 
@@ -203,7 +214,7 @@ Class enemiesClass
 		For Local enm:Int = 1 To enemiesChance.Length()
 
 			If ToLoadEnemy(enm) 
-				img[enm].Discard()
+				If img[enm] <> Null img[enm].Discard()
 			End
 
 		Next

@@ -9,7 +9,7 @@ Class atlasClass
 	Field img:Image[10], _img:Image, thpath:String
 	Field cnt:Int, num:Int[10]
 
-	Method Load:Void(path:String)
+	Method Init:Void(path:String)
 
 		'load image atlas'
 		_img = LoadImage( path )
