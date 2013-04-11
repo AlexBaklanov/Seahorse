@@ -4,17 +4,14 @@ Import imp
 
 Global menu:menuClass = New menuClass
 
-'Global playMenuBtn:Buttons = New Buttons
+'Global playMenuBtn := New Buttons
 
-Global levelPlay:Buttons[5]
+Global levelPlay:Button[5]
 
-Global shopMenuBtn:Buttons = New Buttons
-
-Global shopMoreGames:Buttons = New Buttons
-
-Global playSurvivalBtn := New Buttons
-
-Global reset_btn:Buttons = New Buttons
+Global shopMenuBtn := New Button
+Global shopMoreGames := New Button
+Global playSurvivalBtn := New Button
+Global reset_btn := New Button
 
 'Global menuPerc:Image[4]
 Global menuPerces := New atlasClass
@@ -32,7 +29,7 @@ Class menuClass
 		bgr = LoadImage ( "menu/menu"+retinaStr+".jpg", 1, Image.MidHandle )
 
 		For Local lp:Int = 1 To 3
-			levelPlay[lp] = New Buttons
+			levelPlay[lp] = New Button
 			levelPlay[lp].Init("", "menu/level"+lp+"",1,1,2)
 			'menuPerc[lp] = LoadImage( "menu/menuPerc0" + lp + "" + loadadd + ".png" )
 		Next
@@ -141,13 +138,13 @@ Class menuClass
 		menuPerces.Draw(1, 	dw - menuPerces.w[1] + swimPerc, 		-5 - swimPerc,							swimPerc/5)
 		menuPerces.Draw(2, 	dw - menuPerces.w[2] + swimPerc, 		dh - menuPerces.h[2] + swimPerc, 		swimPerc/5)
 
-		reset_btn.Draw( dw - reset_btn.Width, dh/3*2 )
+		reset_btn.Draw( dw - reset_btn.w, dh/3*2 )
 
 		DrawFont( "v0.28", 10 * Retina, 10 * Retina, False, 50 )
 
 		If CurrentLevel = 4
 
-			playSurvivalBtn.Draw( dw/2 - playSurvivalBtn.Width/2, dh/5 * 3 )
+			playSurvivalBtn.Draw( dw/2 - playSurvivalBtn.w/2, dh/5 * 3 )
 
 			SetAlpha(.5)
 
@@ -156,10 +153,10 @@ Class menuClass
 		SetBlend(1)
 		DrawImage( flare, dw/2, dh/2, rotateFlare, 3, 3 )
 		SetBlend(0)
-		levelPlay[CurrentLevel].Draw( dw/2 - levelPlay[CurrentLevel].Width/2, dh/2 - levelPlay[CurrentLevel].Height/2	   )
-		DrawFont ( "", dw/2 - levelPlay[CurrentLevel].Width/2, dh/5, True	)
+		levelPlay[CurrentLevel].Draw( dw/2 - levelPlay[CurrentLevel].w/2, dh/2 - levelPlay[CurrentLevel].h/2	   )
+		DrawFont ( "", dw/2 - levelPlay[CurrentLevel].w/2, dh/5, True	)
 
-		If CurrentLevel < 4	shopMenuBtn.Draw( dw/2 - shopMenuBtn.Width/2, dh - shopMenuBtn.Height )
+		If CurrentLevel < 4	shopMenuBtn.Draw( dw/2 - shopMenuBtn.w/2, dh - shopMenuBtn.h )
 
 		shopMoreGames.Draw(0, 0)
 

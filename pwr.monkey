@@ -3,54 +3,60 @@ Strict
 Import imp
 
 Global isAnyPowerAvailable:Bool
-Global powersBackBtn:Buttons = New Buttons
+Global powersBackBtn := New Button
 Global powersUpgradeMode:Int
-Global slidePowersUpgrade:Int
+Global powersSlide:Int
 Global powersUpgradeBgr:Image
-
-Global powersActivateImg:Image
-'Global powersLockedImg:Image
 
 Global itemWindow:Image
 Global bluredBgr:Image
-Global isWindowShow:Int
+Global curPowerWindow:Int
 
-Global buy_btn := New Buttons
-Global cancel_btn := New Buttons
-Global done_btn := New Buttons
+Global buy_btn := New Button
+Global cancel_btn := New Button
 
 Global powersText:String[29]
-Global powerButton:PowersButtonsClass[29]
+Global powerButton:Button[29]
+Global powerButtonW:Int = 64
+Global powerButtonH:Int = 71
 Global powersPic:Image
 
 Global powerIconForeground:Image
 
-Global allPowerBtnsImg:Image
+	'd888888b d8b   db d888888b d888888b 
+	'  `88'   888o  88   `88'   `~~88~~' 
+	'   88    88V8o 88    88       88    
+	'   88    88 V8o88    88       88    
+	'  .88.   88  V888   .88.      88    
+	'Y888888P VP   V8P Y888888P    YP    
 
 Function PowersCreate:Void()
 
 	powersUpgradeBgr = LoadImage( "powers/powersUpgradeBgr" + retinaStr + ".jpg", 1, Image.MidHandle )
-	powersActivateImg = LoadImage( "powers/activated" + loadadd + ".png" )
 	bluredBgr = LoadImage( "powers/bluredBgr.jpg", 1, Image.MidHandle )
+	
 	itemWindow = LoadImage( "powers/itemWindow" + retinaStr + ".png", 1, Image.MidHandle )
-	powerIconForeground = LoadImage( "powers/powerIconForeground" + loadadd + ".png", 2 )
 
-	buy_btn.Init("", "powers/powersBuy", 1,1,2)
-	cancel_btn.Init("", "powers/powersCancel", 1,1,2)
+	powerIconForeground = shopGUI.img[11]
 
-	isAnyPowerAvailable = False
+	buy_btn.Init("", "", 1,1,3,shopGUI.img[12])
+	cancel_btn.Init("", "", 1,1,3,shopGUI.img[10])
 
-	allPowerBtnsImg = LoadImage( "powers/power_btns" + loadadd + ".png", 64 * Retina, 71 * Retina, 21 )
+	powersBackBtn.Init("Done")
 
-	For Local pwrs:Int = 1 To 21
+	For Local pwrs:Int = 0 Until 21
 
-		Local pwrbtn:PowersButtonsClass = New PowersButtonsClass
-		pwrbtn.Init(pwrs)
-		PowersButtons.AddLast(pwrbtn)
-
-		powerButton[pwrs] = pwrbtn
+		'Local pwrbtn:PowersButtonsClass = New PowersButtonsClass
+		'pwrbtn.Init(pwrs)
+		'PowersButtons.AddLast(pwrbtn)
+		powerButton[pwrs] = New Button
+		powerButton[pwrs].Init("", "", 1, 1, 3, shopGUI.img[pwrs + 13])
 
 	Next
+
+	curPowerWindow = -1
+
+	isAnyPowerAvailable = False
 
 	CheckForAvailablePowers()
 
@@ -67,18 +73,12 @@ Function PowersCreate:Void()
 
 End
 
-
-'8 8888      88 8 888888888o   8 888888888o.            .8.    8888888 8888888888 8 8888888888   
-'8 8888      88 8 8888    `88. 8 8888    `^888.        .888.         8 8888       8 8888         
-'8 8888      88 8 8888     `88 8 8888        `88.     :88888.        8 8888       8 8888         
-'8 8888      88 8 8888     ,88 8 8888         `88    . `88888.       8 8888       8 8888         
-'8 8888      88 8 8888.   ,88' 8 8888          88   .8. `88888.      8 8888       8 888888888888 
-'8 8888      88 8 888888888P'  8 8888          88  .8`8. `88888.     8 8888       8 8888         
-'8 8888      88 8 8888         8 8888         ,88 .8' `8. `88888.    8 8888       8 8888         
-'` 8888     ,8P 8 8888         8 8888        ,88'.8'   `8. `88888.   8 8888       8 8888         
-'  8888   ,d8P  8 8888         8 8888    ,o88P' .888888888. `88888.  8 8888       8 8888         
-'   `Y88888P'   8 8888         8 888888888P'   .8'       `8. `88888. 8 8888       8 888888888888
-
+	'db    db d8888b. d8888b.  .d8b.  d888888b d88888b 
+	'88    88 88  `8D 88  `8D d8' `8b `~~88~~' 88'     
+	'88    88 88oodD' 88   88 88ooo88    88    88ooooo 
+	'88    88 88~~~   88   88 88~~~88    88    88~~~~~ 
+	'88b  d88 88      88  .8D 88   88    88    88.     
+	'~Y8888P' 88      Y8888D' YP   YP    YP    Y88888P
 
 Global touchDownTime:Float
 
@@ -88,24 +88,22 @@ Function PowersUpdate:Void()
 	Local tappedNum:Int
 
 	' Window'
-	If isWindowShow
+	If curPowerWindow > -1
 
 		If winResult = 1
 
 			winResult = 0
-
 			coins += 500000
-
 			CheckForAvailablePowers()
 
 		End
 
-		If weaponActivated[isWindowShow] = False And buy_btn.Pressed()
+		If weaponPurchased[curPowerWindow] = False And buy_btn.Pressed()
 
-			If coins >= weaponCost[isWindowShow]
+			If coins >= weaponCost[curPowerWindow]
 
-				weaponActivated[isWindowShow] = True
-				coins -= weaponCost[isWindowShow]
+				weaponPurchased[curPowerWindow] = True
+				coins -= weaponCost[curPowerWindow]
 				SaveGame()
 
 				CheckForAvailablePowers()
@@ -122,167 +120,14 @@ Function PowersUpdate:Void()
 
 		End
 
-		If cancel_btn.Pressed() Or done_btn.Pressed()
-			
+		If cancel_btn.Pressed()
 			
 			waveBack = True
 			winSclActive = True
 			sclWave = 1
 
-			'isWindowShow = 0
-			'powersPic.Discard()
-
 		End
 
-		Return
-
-	End
-
-	For Local pwrbtn := Eachin PowersButtons
-
-		tappedNum += 1
-
-		#rem
-		If pwrbtn.Pressed() And TouchDown(0)
-
-			pwrbtn.moved = True
-
-			touchDownTime = 1
-
-			Return
-
-		Else
-
-			touchDownTime = 0
-
-		End
-		#end
-
-		If pwrbtn.Pressed() 'pwrbtn.locked = False And pwrbtn.Pressed()
-
-			isWindowShow = tappedNum
-			
-			winSclActive = True
-			sclWaveMax = 0.2 sclWave = 0 sclWaveSpeed = .15
-
-			Local nl:String = ""
-			If isWindowShow < 10 nl = "0"
-			powersPic = LoadImage( "powers/pics/pics" + nl + "" + isWindowShow + "" + retinaStr + ".png", 1, Image.MidHandle )
-
-			Exit
-
-		End
-
-	End
-
-End
-
-
-'8 888888888o.      8 888888888o.            .8. `8.`888b                 ,8' 
-'8 8888    `^888.   8 8888    `88.          .888. `8.`888b               ,8'  
-'8 8888        `88. 8 8888     `88         :88888. `8.`888b             ,8'   
-'8 8888         `88 8 8888     ,88        . `88888. `8.`888b     .b    ,8'    
-'8 8888          88 8 8888.   ,88'       .8. `88888. `8.`888b    88b  ,8'     
-'8 8888          88 8 888888888P'       .8`8. `88888. `8.`888b .`888b,8'      
-'8 8888         ,88 8 8888`8b          .8' `8. `88888. `8.`888b8.`8888'       
-'8 8888        ,88' 8 8888 `8b.       .8'   `8. `88888. `8.`888`8.`88'        
-'8 8888    ,o88P'   8 8888   `8b.    .888888888. `88888. `8.`8' `8,`'         
-'8 888888888P'      8 8888     `88. .8'       `8. `88888. `8.`   `8'          
-
-
-
-Global pbCols:Int = 7
-Global pbRows:Int = 3
-
-Global waveAdd:Float
-Global waveSpd:Float
-Global waved:Bool
-
-Global winSclActive:Bool, amplitude:Float = .3
-Global sclWave:Float, sclWaveSpeed:Float, sclWaveMax:Float
-Global waveBack:Bool, sclAlpha:Float
-
-Global Rt:Int
-Global swimRt:Float
-
-Function PowersDraw:Void()
-	
-	If sclWave < 1.0
-
-		DrawImage ( powersUpgradeBgr, slidePowersUpgrade + dw/2, dh/2, 0, retinaScl, retinaScl )
-		powersBackBtn.Draw( slidePowersUpgrade, 0 )
-
-		'DrawImage( coinsBgr, slidePowersUpgrade + dw/2, dh - (pbRows+1.4)*64*Retina )
-		Yellow()
-		DrawFont( "|" + coins, slidePowersUpgrade + dw/2 + fontKern*Retina/2, dh - (pbRows+1.4)*64*Retina, True )
-		White()
-		
-		If slidePowersUpgrade = 0 And waved = False
-			'If ChannelState(0) = 0 PlaySound( bottlesSnd, 0 )
-			waveAdd += waveSpd
-			If waveAdd < -5 waveAdd = -5 waveSpd = 1
-			If waveAdd > 0 waveAdd = 0 waved = True
-		End
-
-		Local pbXc:Int
-		Local pbYc:Int
-
-		Local pbX:Float
-		Local pbY:Float
-
-		Local pbNum:Int
-
-		Local addWidth:Int = 2 * Retina
-		Local addHeight:Int = 10 * Retina
-
-		For Local pwrbtn := Eachin PowersButtons
-			
-			Local waveAdd1:Float = waveAdd * pbXc
-
-			pbNum += 1
-
-			If pbNum = 22 Exit
-
-			Local wCostTxt:String = weaponCost[wn[pbNum-1]]
-
-			If touchDownTime = 0
-				pbX = slidePowersUpgrade + dw/2 - Float(pbCols)*( pwrbtn.Width + addWidth )/2.0 + ( pwrbtn.Width + addWidth ) * pbXc
-				pbY = dh - pbRows*( powerButton[wn[pbNum-1]].Height + addHeight ) + ( powerButton[wn[pbNum-1]].Height + addHeight ) * pbYc
-			Else
-				pbX = TouchX()
-				pbY = TouchY()
-			End
-
-			'button
-			powerButton[wn[pbNum-1]].Draw( pbX + waveAdd1, pbY )
-			DrawImage (powerIconForeground, 	pbX + waveAdd1 + 	Int( powerButton[wn[pbNum-1]].btn.Down ) * Retina, 
-												pbY + 				Int( powerButton[wn[pbNum-1]].btn.Down ) * Retina, 
-												Int(weaponActivated[wn[pbNum-1]]) )
-
-			'active
-			If weaponActivated[wn[pbNum-1]]
-				'DrawImage ( powersActivateImg, pbX + waveAdd1, pbY )
-				wCostTxt = "" '"bought"
-			End
-
-			'locked
-			'If wn[pbNum-1] > CurrentLevel * 7 DrawImage ( powersLockedImg, pbX + waveAdd1, pbY )
-
-			'cost
-			DrawFont ( wCostTxt, pbX + pwrbtn.Width/2 + 11*Retina + waveAdd1, pbY + pwrbtn.Height/6, True, 60 )
-
-			pbXc += 1
-			If pbXc > pbCols - 1
-				pbXc = 0
-				pbYc += 1
-			End
-
-		Next
-		
-	End
-	
-	If isWindowShow
-		
 		If winSclActive
 			
 			If waveBack
@@ -292,17 +137,18 @@ Function PowersDraw:Void()
 				
 				If sclWave < .1
 					
-					If weaponActivated[isWindowShow] = True
+					If weaponPurchased[curPowerWindow] = True
 						For Local bub:Int = 1 To 5
-							CreateBubbles( powerButton[isWindowShow].btn.x + Rnd(50*Retina), powerButton[isWindowShow].btn.y + Rnd(50*Retina) )
+							CreateBubbles( powerButton[curPowerWindow].x + Rnd(50*Retina), powerButton[curPowerWindow].y + Rnd(50*Retina) )
 						Next
 					End
 					
 					waveBack = False
 					winSclActive = False
-					isWindowShow = 0
+					curPowerWindow = -1
 					powersPic.Discard()
 					Return
+
 				End
 				
 			Else
@@ -322,10 +168,127 @@ Function PowersDraw:Void()
 			
 		End
 
+		Return
+
+	End
+
+	For Local pw:Int = 0 Until 21
+
+		If powerButton[pw].Pressed()
+
+			curPowerWindow = pw
+			
+			winSclActive = True
+			sclWaveMax = 0.2 sclWave = 0 sclWaveSpeed = .15
+
+			Local nl:String = ""
+			If curPowerWindow < 9 nl = "0"
+			powersPic = LoadImage( "powers/pics/pics" + nl + "" + (curPowerWindow + 1) + "" + retinaStr + ".png", 1, Image.MidHandle )
+
+			'Print "power pressed " + pw
+
+			Exit
+
+		End
+
+	End
+
+	If powersBackBtn.Pressed()
+
+	End
+
+	If powersSlide = 0 And inertiaDone = False
+		'If ChannelState(0) = 0 PlaySound( bottlesSnd, 0 )
+		inertiaAdd += inertiaSpd
+		If inertiaAdd < -5 inertiaAdd = -5 inertiaSpd = 1
+		If inertiaAdd > 0 inertiaAdd = 0 inertiaDone = True
+	End
+
+End
+
+	'd8888b. d8888b.  .d8b.  db   d8b   db 
+	'88  `8D 88  `8D d8' `8b 88   I8I   88 
+	'88   88 88oobY' 88ooo88 88   I8I   88 
+	'88   88 88`8b   88~~~88 Y8   I8I   88 
+	'88  .8D 88 `88. 88   88 `8b d8'8b d8' 
+	'Y8888D' 88   YD YP   YP  `8b8' `8d8'  
+
+Global pbCols:Int = 7
+Global pbRows:Int = 3
+
+Global inertiaAdd:Float
+Global inertiaSpd:Float
+Global inertiaDone:Bool
+
+Global winSclActive:Bool, amplitude:Float = .3
+Global sclWave:Float, sclWaveSpeed:Float, sclWaveMax:Float
+Global waveBack:Bool, sclAlpha:Float
+
+Global Rt:Int
+Global swimRt:Float
+
+Function PowersDraw:Void()
+	
+	If sclWave < 1.0
+
+		DrawImage ( powersUpgradeBgr, powersSlide + dw/2, dh/2, 0, retinaScl, retinaScl )
+		powersBackBtn.Draw( powersSlide, 0 )
+
+		Yellow()
+		DrawFont( "|" + coins, powersSlide + dw/2 + fontKern*Retina/2, dh - (pbRows+1.4)*64*Retina, True )
+		White()
+
+		Local pbXc:Int
+		Local pbYc:Int
+
+		Local pbX:Float
+		Local pbY:Float
+
+		Local addWidth:Int = 2 * Retina
+		Local addHeight:Int = 10 * Retina
+
+		For Local pw:Int = 0 Until 21
+
+			'Print pw + " " + wn[pw]
+			
+			Local inertiaAddForColumns:Float = inertiaAdd * pbXc
+
+			Local wCostTxt:String = weaponCost[wn[pw]]
+
+			pbX = powersSlide + dw/2 - Float(pbCols)*( powerButtonW + addWidth )/2.0 + ( powerButtonW + addWidth ) * pbXc
+			pbY = dh - pbRows*( powerButtonH + addHeight ) + ( powerButtonH + addHeight ) * pbYc
+			
+
+			'button
+			powerButton[wn[pw]].Draw( pbX + inertiaAddForColumns + 3 * Retina, pbY + 13 * Retina )
+			DrawImage (powerIconForeground, 	pbX + inertiaAddForColumns + 	Int( powerButton[wn[pw]].Down ) * Retina, 
+												pbY + 							Int( powerButton[wn[pw]].Down ) * Retina, 
+												Int(weaponPurchased[wn[pw]]) )
+
+			'active
+			If weaponPurchased[wn[pw]]
+				wCostTxt = ""
+			End
+
+			'cost
+			DrawFont ( wCostTxt, pbX + powerButton[pw].w/2 + 11*Retina + inertiaAddForColumns, pbY + powerButton[pw].h/6, True, 60 )
+
+			pbXc += 1
+			If pbXc > pbCols - 1
+				pbXc = 0
+				pbYc += 1
+			End
+
+		Next
+		
+	End
+	
+	If curPowerWindow > -1
+
 		Local itemWindowHeight:Int = itemWindow.Height()
 
-		Local buy_btnWidth:Int = buy_btn.Width/2
-		Local buy_btnHeight:Int = buy_btn.Height
+		Local buy_btnWidth:Int = buy_btn.w/2
+		Local buy_btnHeight:Int = buy_btn.h
 		
 		
 		If sclWave < 1.0 SetAlpha(sclAlpha)
@@ -357,110 +320,33 @@ Function PowersDraw:Void()
 		
 
 		'BUTTONS'
-		If weaponActivated[isWindowShow] SetAlpha(.5)
+		If weaponPurchased[curPowerWindow] 
+			SetAlpha(.5)
+		End
 			buy_btn.Draw( 373*Retina, 392*Retina - sclAlpha*200*Retina )
-		If weaponActivated[isWindowShow] SetAlpha(1)
+		If weaponPurchased[curPowerWindow]
+			SetAlpha(1)
+		End
 			
 		cancel_btn.Draw( 98 * Retina, 431 * Retina  - sclAlpha*200*Retina )
 		
-		
-			'DrawFont( powersText[isWindowShow], dw/2, dh/2 + itemWindowHeight - buy_btnHeight * 1.3, True, 100 )
-		'Else
-''		Local doneTxt:String = "Purchased."
-''			DrawFont( doneTxt, dw/2, dh/2 + buy_btnHeight * 1.3, True, 70 )
-''			done_btn.Draw( 	dw/2 - buy_btnWidth, 	dh/2 + buy_btnHeight )
-''		End
-		
-		
-
-		'If waveBack = False Return
-		
 	End
-	'DrawText(touchDownTime, 100,100)
+
+	DrawText(Int(weaponPurchased[3]), 100,100)
 	'DrawText(sclWave, 100,100)
 
 End
 
-
-
-
-
 Function CheckForAvailablePowers:Void()
 
 	isAnyPowerAvailable = False
-	Local pbNum:Int
 
-	For Local pwrbtn := Eachin PowersButtons
+	For Local pw:Int = 0 Until 21
 
-		pbNum += 1
-
-		If weaponActivated[ wn[pbNum-1] ] = False And weaponCost[ wn[pbNum-1] ] <= coins 'And powerButton[wn[pbNum-1]].locked = False 
+		If weaponPurchased[ wn[pw] ] = False And weaponCost[ wn[pw] ] <= coins
 			isAnyPowerAvailable = True
 		End
 
 	Next
-
-End
-
-Global PowersButtons := New List<PowersButtonsClass>
-
-Class PowersButtonsClass
-	
-	Field btn:Buttons = New Buttons
-	Field Height:Int
-	Field Width:Int
-
-	Field x:Float
-	Field y:Float
-
-	Field moved:Bool
-
-	'Field locked:Bool
-
-	Method Init:Void( pbNum:Int )
-
-		Local zero:String
-
-		If pbNum < 10 zero = "0" Else zero = ""
-
-		Local allPowerBtnsImgFrame:Int = pbNum - 1
-		'= allPowerBtnsImg.GrabImage( 64 * (pbNum-1) * Retina, 71 * (pbNum-1) * Retina, 64 * Retina, 71 * Retina )
-
-		btn.Init("", "none", 1, 1, 3, allPowerBtnsImg, allPowerBtnsImgFrame)
-
-		Width = btn.Width
-		Height = btn.Height
-
-		'If pbNum > CurrentLevel * 7 locked = True
-
-	End
-
-	Method Draw:Void( theX:Float, theY:Float )
-
-		If moved
-			x = TouchX()
-			y = TouchY()
-		Else
-			x = theX
-			y = theY
-		End
-
-		btn.Draw(x, y)
-
-	End
-
-	Method Pressed:Bool()
-
-		If btn.Pressed() Return True
-
-		Return False
-
-	End
-
-	Method Deinit:Void()
-
-		btn.Deinit()
-
-	End
 
 End

@@ -173,9 +173,9 @@ End
 '88      88   88 88b  d88 db   8D 88.     
 '88      YP   YP ~Y8888P' `8888Y' Y88888P 
 
-Global pause_btn:Buttons = New Buttons
-Global pause_Menu_btn:Buttons = New Buttons
-Global pause_Resume_btn:Buttons = New Buttons
+Global pause_btn := New Button
+Global pause_Menu_btn := New Button
+Global pause_Resume_btn := New Button
 
 Global pausePolyPoints:Float[]
 
@@ -208,7 +208,7 @@ End
 
 Function DrawPauseBtn:Void()
 
-	If alive pause_btn.Draw( dw - pause_btn.Width, 0 )
+	If alive pause_btn.Draw( dw - pause_btn.w, 0 )
 
 End
 
@@ -222,8 +222,8 @@ Function DrawPause:Void()
 	SetAlpha(1)
 	White()
 
-	pause_Resume_btn.Draw 	( dw/2 - pause_Resume_btn.Width/2, 		dh/6*2 )
-	pause_Menu_btn.Draw 	( dw/2 - pause_Menu_btn.Width/2, 		dh/6*3 )
+	pause_Resume_btn.Draw 	( dw/2 - pause_Resume_btn.w/2, 		dh/6*2 )
+	pause_Menu_btn.Draw 	( dw/2 - pause_Menu_btn.w/2, 		dh/6*3 )
 
 	DrawTime()
 
@@ -272,7 +272,7 @@ End
 '`8b d8'8b d8'   .88.   88  V888 
 ' `8b8' `8d8'  Y888888P VP   V8P 
 
-Global toMenuBtn:Buttons = New Buttons
+Global toMenuBtn := New Button
 Global flare:Image
 Global flareRotation:Float
 
@@ -330,7 +330,7 @@ Function DrawWin:Void()
 	
 	DrawImage ( winIcon, dw/2, dh/2 )
 
-	toMenuBtn.Draw(dw/2 - toMenuBtn.Width/2, dh - toMenuBtn.Height)
+	toMenuBtn.Draw(dw/2 - toMenuBtn.w/2, dh - toMenuBtn.h)
 
 End
 

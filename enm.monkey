@@ -56,7 +56,7 @@ Class enemiesClass
 					Case 7, 15, 23, 21
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 4, Image.MidHandle)
 
-					Case 3, 10, 12, 26
+					Case 10, 12, 26
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 5, Image.MidHandle)
 
 					Case 4, 5, 25
@@ -65,16 +65,14 @@ Class enemiesClass
 					Case 17
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 100*Retina, 100*Retina, 8, Image.MidHandle)
 
-					Case 2, 6
-
-
+					Case 2, 3, 6
 
 						enemyImg[enm] = New atlasClass
 						enemyImg[enm].Init("enemies/enemy" + zeroAdd + "" + enm + "/img" + loadadd + ".png")
 
 						enemyFrm[enm] = New framesClass
 						enemyFrm[enm].Init("enemies/enemy" + zeroAdd + "" + enm + "/")
-						Print "img: " + enemyImg[enm].cnt
+						'Print "img: " + enm
 					
 					Default
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 1, Image.MidHandle)
@@ -108,13 +106,14 @@ Class enemiesClass
 
 			'OUT of SCREEN'
 			If ( en.x < -1 * en.w ) Or ( en.y < -1 * en.h ) Or ( en.y > dh + dh * (1 - Int(en.burned)) + en.w ) Or ( en.kicked And ( en.x > dw + en.w ) )
+				en.Deinit()
 				enemy.Remove(en)
 			End
 
 			If friendMode = False And weaponCamouflage.active <> 1 And weaponHyperJump.active <> 1 And en.kicked = False And en.x < closeToHero
 
 				'COLLISION'
-				If Distance(en.pivotX, en.pivotY, hero.x, hero.y) < 5 * Retina + en.w * en.sclX * en.radius / 2 And en.catched = False
+				If Distance(en.pivotX, en.pivotY, hero.x, hero.y) < en.sclX * en.radius And en.catched = False
 					
 					If en.kicked
 
@@ -212,22 +211,27 @@ Class enemiesClass
 
 	Method Deinit:Void()
 
-		enemy.Clear()
+		For Local enm:Int = 1 Until enemiesChance.Length()
 
-		For Local enm:Int = 1 To enemiesChance.Length()
-
-			If ToLoadEnemy(enm) 
+			If ToLoadEnemy(enm)
+				If enemyImg[enm] <> Null enemyImg[enm].Deinit()
 				If img[enm] <> Null img[enm].Discard()
 			End
 
 		Next
+
+		For Local en := Eachin enemy
+
+			en.Deinit()
+
+		Next
+		enemy.Clear()
 
 	End
 
 End
 
 Global enemy := New List<enemyClass>
-Global rotateSide:Float
 
 Function RequestEnemy:Void()
 

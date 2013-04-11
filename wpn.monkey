@@ -26,69 +26,65 @@ Global enemyCoinsImg:Image
 Global camouflageImg:Image
 
 ' Order array
-Global wn:Int[] = [6,4,1,19,7,21,15,3,2,16,20,8,17,14,5,11,9,10,13,18,12]
+Global wn:Int[] = [5,3,0,18,6,20,14,2,1,15,19,7,16,13,4,10,8,9,12,17,11]
 
 
 Function WeaponLoad:Void()
 
-	If weaponActivated[1] Or weaponActivated[2]
+	If weaponPurchased[0] Or weaponPurchased[1]
 		shellImg 			= LoadImage("powersUse/Wshell"			+loadadd+".png", 1, Image.MidHandle) 
 	End
-	If weaponActivated[3] 
-		lightningImg 		= LoadImage("powersUse/Wlightning"		+loadadd+".png") 
-	End
-	If weaponActivated[3] 
+	If weaponPurchased[2] 
+		lightningImg 		= LoadImage("powersUse/Wlightning"		+loadadd+".png")
 		lightningFImg		= LoadImage("powersUse/WlightningFlash"	+loadadd+".png", 1, Image.MidHandle) 	
 	End
-	If weaponActivated[4] 
+	If weaponPurchased[3] 
 		bubbleImg 			= LoadImage("powersUse/Wbubbles"			+loadadd+".png", 1, Image.MidHandle) 
 	End
-	If weaponActivated[5] 
+	If weaponPurchased[4] 
 		anchorImg 			= LoadImage("powersUse/Wanchor"			+loadadd+".png") 						
 	End
-	If weaponActivated[7] 
+	If weaponPurchased[6] 
 		batiscafImg			= LoadImage("powersUse/Wbatiscaf"			+loadadd+".png", 3, Image.MidHandle) 	
 	End
-	If weaponActivated[8] 
+	If weaponPurchased[7] 
 		fishFlockImg		= LoadImage("powersUse/WfishFlock"		+loadadd+".png", 1, Image.MidHandle) 	
 	End
-	If weaponActivated[9] 
+	If weaponPurchased[8] 
 		fishCleenImg		= LoadImage("powersUse/WfishCleen"		+loadadd+".png", 1, Image.MidHandle) 	
 	End
-	If weaponActivated[10] 
+	If weaponPurchased[9] 
 		starfishImg			= LoadImage("powersUse/Wstarfish"			+loadadd+".png", 1, Image.MidHandle)	
 	End	
-	If weaponActivated[11] 
-		psyImg 				= LoadImage("powersUse/Wpsy"				+loadadd+".png") 						
-	End
-	If weaponActivated[11] 
+	If weaponPurchased[10] 
+		psyImg 				= LoadImage("powersUse/Wpsy"				+loadadd+".png")
 		psyEffectImg		= LoadImage("powersUse/WpsyEffect"		+loadadd+".png", 1, Image.MidHandle) 	
 	End
-	If weaponActivated[12] 
+	If weaponPurchased[11] 
 		fleeImg 			= LoadImage("powersUse/Wflee.png"						   , 1, Image.MidHandle) 	
 	End
-	If weaponActivated[13] 
+	If weaponPurchased[12] 
 		hyperJumpImg		= LoadImage("powersUse/WhyperJump.png"				   , 1, Image.MidHandle)
 	End
-	If weaponActivated[15] 
+	If weaponPurchased[14] 
 		hammerImg 			= LoadImage("powersUse/Whammer"		+retinaStr+".png"  , 1, Image.MidHandle)
 	End
-	If weaponActivated[16] 
+	If weaponPurchased[15] 
 		stoneImg 			= LoadImage("powersUse/Wstone"			+loadadd+".png", 1, Image.MidHandle)
 	End
-	If weaponActivated[17] 
+	If weaponPurchased[16] 
 		fireFlyImg 			= LoadImage("powersUse/WfireFly"			+loadadd+".png", 1, Image.MidHandle)
 	End
-	If weaponActivated[18] 
+	If weaponPurchased[17] 
 		swirlImg 			= LoadImage("powersUse/Wswirl"			+loadadd+".png", 1, Image.MidHandle)
 	End
-	If weaponActivated[19] 
+	If weaponPurchased[18] 
 		reduceImg 			= LoadImage("powersUse/Wreduce.png"					   , 1, Image.MidHandle)
 	End
-	If weaponActivated[20] 
+	If weaponPurchased[19] 
 		enemyCoinsImg 		= LoadImage("powersUse/WenemyCoins"		+loadadd+".png", 1, Image.MidHandle)
 	End
-	If weaponActivated[21] 
+	If weaponPurchased[20] 
 		'camouflageImg 		= LoadImage("powersUse/Wcamouflage"		+loadadd+".png", 1, Image.MidHandle)
 	End
 
@@ -98,64 +94,60 @@ End
 
 Function DeinitWeapon:Void()
 
-	If weaponActivated[1] Or weaponActivated[2] 	
+	If weaponPurchased[0] Or weaponPurchased[1]
 		shellImg.Discard()			
 	End
-	If weaponActivated[3] 							
-		lightningImg.Discard()		
-	End
-	If weaponActivated[3] 							
+	If weaponPurchased[2] 							
+		lightningImg.Discard()							
 		lightningFImg.Discard()		
 	End
-	If weaponActivated[4] 							
-		'bubbleImg.Discard()			
+	If weaponPurchased[3] 							
+		bubbleImg.Discard()			
 	End
-	If weaponActivated[5] 							
+	If weaponPurchased[4] 							
 		anchorImg.Discard()			
 	End
-	If weaponActivated[7] 							
+	If weaponPurchased[6] 							
 		batiscafImg.Discard()		
 	End
-	If weaponActivated[8] 							
+	If weaponPurchased[7] 							
 		fishFlockImg.Discard()		
 	End
-	If weaponActivated[9] 							
+	If weaponPurchased[8] 							
 		fishCleenImg.Discard()		
 	End
-	If weaponActivated[10] 							
+	If weaponPurchased[9] 							
 		starfishImg.Discard()		
 	End
-	If weaponActivated[11] 							
-		psyImg.Discard()			
-	End
-	If weaponActivated[11] 							
+	If weaponPurchased[10] 							
+		psyImg.Discard()							
 		psyEffectImg.Discard()		
 	End
-	If weaponActivated[12] 							
+	If weaponPurchased[11] 							
 		fleeImg.Discard()			
 	End
-	If weaponActivated[13] 							
+	If weaponPurchased[12] 							
 		hyperJumpImg.Discard()		
 	End
-	If weaponActivated[15] 							
+	If weaponPurchased[14] 							
 		hammerImg.Discard()			
 	End
-	If weaponActivated[16] 							
+	If weaponPurchased[15] 							
 		stoneImg.Discard()			
 	End
-	If weaponActivated[17] 							
+	If weaponPurchased[17] 							
 		fireFlyImg.Discard()		
 	End
-	If weaponActivated[18] 							
+	If weaponPurchased[16] 							
 		swirlImg.Discard()			
 	End
-	If weaponActivated[19]
+	If weaponPurchased[18]
 		reduceImg.Discard()
 	End
-	If weaponActivated[20]
+	If weaponPurchased[19]
 		enemyCoinsImg.Discard()
 	End
-	If weaponActivated[21]
+	If weaponPurchased[20]
 		'camouflageImg.Discard()
 	End
 
@@ -334,10 +326,10 @@ Function AnyWeaponActive:Bool()
 
 End
 
-Global weaponActivated:Bool[30]
+Global weaponPurchased:Bool[30]
 Global weaponReady:Bool[30]
-'								shell 	shell3 	lightning 	bubble 	anchor 	magnet 	batiscaf 	fishflock 	fishCleen 	starfish 	psy 	flee 	
-Global weaponCost:Int[] = [0, 	2000, 	3000, 	500, 		1000, 	1000, 	200, 	2000, 		2000, 		2000, 		2000, 		1000, 	5000, 	3000, 4000, 1000, 200, 1200, 1300, 5000, 3000, 4000, 1000, 200, 1200, 1300, 5000, 3000, 400]
+'							shell 	shell3 	lightning 	bubble 	anchor 	magnet 	batiscaf 	fishflock 	fishCleen 	starfish 	psy 	flee 	
+Global weaponCost:Int[] = [2000, 	3000, 	500, 		1000, 	1000, 	200, 	2000, 		2000, 		2000, 		2000, 		1000, 	5000, 	3000, 4000, 1000, 200, 1200, 1300, 5000, 3000, 4000, 1000, 200, 1200, 1300, 5000, 3000, 400]
 
 Global WeaponNumber:Int
 
@@ -345,80 +337,80 @@ Function CheckForWeapons:Void()
 
 	'If AnyWeaponActive() Return False
 
-	If ( KeyHit(KEY_W) Or Swipe() ) And globalFriend <= 0 'Or fireBtn.Pressed() )
+	If ( KeyHit(KEY_W) Or ControlTouch() = swipeRight ) And globalFriend <= 0
 
 		'hero.jump = 0
 		touched = False
 		
-		For Local wnbr:Int = 0 To wn.Length()-1
+		For Local wnbr:Int = 0 Until wn.Length()
 			
-			If weaponActivated[ wn[wnbr] ] And weaponReady[ wn[wnbr] ]
+			If weaponPurchased[ wn[wnbr] ] And weaponReady[ wn[wnbr] ]
 				WeaponNumber = wn[wnbr]
 				weaponReady[wn[wnbr]] = False
 				Exit
 			End
 			
-			WeaponNumber = 0
+			WeaponNumber = -1
 			
 		Next
 		
 		Select WeaponNumber
 			
-			Case 1		
+			Case 0		
 				weaponShell.Create()
 				
-			Case 2		
+			Case 1		
 				weaponShell3.Create()
 				
-			Case 3
+			Case 2
 				weaponLightning.Create()
 					
-			Case 4
+			Case 3
 				weaponBubbles.Create()
 		
-			Case 5
+			Case 4
 				weaponAnchor.Create()
 		
-			Case 7
+			Case 6
 				weaponBatiscaf.Create()
 		
-			Case 8
+			Case 7
 				weaponFishFlock.Create()
 		
-			Case 9
+			Case 8
 				weaponFishCleen.Create()
 		
-			Case 10
+			Case 9
 				weaponStarfish.Create()
 		
-			Case 11
+			Case 10
 				weaponPsy.Create()
 		
-			Case 12
+			Case 11
 				weaponFlee.Create()
 		
-			Case 13
+			Case 12
 				weaponHyperJump.Create()
 		
-			Case 15
+			Case 14
 				weaponHammer.Create()
 				
-			Case 16
+			Case 15
 				weaponStone.Create()
 		
-			Case 17
+			Case 16
 				weaponFireFly.Create()
 		
-			Case 18
+			Case 17
 				weaponSwirl.Create()
 		
-			Case 19
+			Case 18
 				weaponReduce.Create()
 		
-			Case 20
+			Case 19
 				weaponEnemyCoins.Create()
 		
-			Case 21
+			Case 20
 				weaponCamouflage.Create()
 				
 		End
@@ -1692,12 +1684,12 @@ End
 
 Function WeaponInit:Void()
 
-	For Local we:Int = 1 To 21
+	For Local we:Int = 0 Until 20
 
-		weaponReady[ wn[we-1] ] = weaponActivated[ wn[we-1] ]
+		weaponReady[ wn[we] ] = weaponPurchased[ wn[we] ]
 
-		weaponReady[6] = False
-		weaponReady[14] = False
+		weaponReady[5] = False
+		weaponReady[13] = False
 
 	Next
 
@@ -1709,11 +1701,11 @@ End
 
 Function NextWeaponDraw:Void()
 
-	For Local we:Int = 1 To 21
+	For Local we:Int = 0 Until 20
 
-		If weaponReady[ wn[we-1] ]
+		If weaponReady[ wn[we] ]
 
-			DrawImage( powersIcon, dw - powersIcon.Width(), dh - powersIcon.Height(), wn[we-1] - 1 )
+			DrawImage( powersIcon, dw - powersIcon.Width(), dh - powersIcon.Height(), wn[we] )
 			Return
 
 		End

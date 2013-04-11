@@ -62,13 +62,13 @@ End
 Function BackgroundDraw:Void()
 	
 	'background main 0'
-	bgr.Draw(0, bgrXactual, 							0, 0, retinaScl, retinaScl)
+	bgr.Draw(0, bgrXactual, 						0, 0, retinaScl, retinaScl)
 	bgr.Draw(0, bgrXactual + bgr.w[0]*retinaScl,	0, 0, retinaScl, retinaScl)
 	
 	DrawImage(bgrMiddleImg, bgrXmiddle, dh, 0, retinaScl, retinaScl, currentBgrMiddle)
 	
 	'background bottom 1'
-	bgr.Draw(1, bgrXbottom, 							dh - bgr.h[1]*retinaScl, 	0, retinaScl, retinaScl)
+	bgr.Draw(1, bgrXbottom, 						dh - bgr.h[1]*retinaScl, 	0, retinaScl, retinaScl)
 	bgr.Draw(1, bgrXbottom + bgr.w[1]*retinaScl,	dh - bgr.h[1]*retinaScl, 	0, retinaScl, retinaScl)
 
 End

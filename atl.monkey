@@ -4,17 +4,19 @@ Import imp
 
 Class atlasClass
 	
-	Field x:Float[10], y:Float[10]
-	Field xStart:Int[10], yStart:Int[10], w:Int[10], h:Int[10], pivotX:Int[10], pivotY:Int[10]
-	Field img:Image[10], _img:Image, thpath:String
-	Field cnt:Int, num:Int[10]
+	Field x:Float[50], y:Float[50]
+	Field xStart:Int[50], yStart:Int[50], w:Int[50], h:Int[50], pivotX:Int[50], pivotY:Int[50]
+	Field img:Image[50], _img:Image
+	Field cnt:Int, num:Int[50], _path:String
+	Field frm:Int[50]
 
 	Method Init:Void(path:String)
 
 		'load image atlas'
 		_img = LoadImage( path )
+		'Print "load atlas " + path
 
-		thpath = path
+		_path = path
 
 		'correct path'
 		Local correctPath:Int = 4
@@ -51,9 +53,9 @@ Class atlasClass
 
 					Case "y" yStart[imgNum] = Int(rectValue[1..])*retinaValue
 
-					Case "w" w[imgNum] = Int(rectValue[1..])*retinaValue - xStart[imgNum]
+					Case "w" w[imgNum] = Int(rectValue[1..])*retinaValue
 
-					Case "h" h[imgNum] = Int(rectValue[1..])*retinaValue - yStart[imgNum]
+					Case "h" h[imgNum] = Int(rectValue[1..])*retinaValue
 
 					'pivot x'
 					Case "i" pivotX[imgNum] = Int(rectValue[1..])*retinaValue
@@ -61,12 +63,19 @@ Class atlasClass
 					'pivot y'
 					Case "j" pivotY[imgNum] = Int(rectValue[1..])*retinaValue
 
+					'frame'
+					Case "f" frm[imgNum] = Int(rectValue[1..])
+
 				End
 
 			Next
 
-			img[imgNum] = _img.GrabImage(xStart[imgNum], yStart[imgNum], w[imgNum], h[imgNum])
-			img[imgNum].SetHandle( pivotX[imgNum], pivotY[imgNum] )
+			If frm[imgNum] = 0 frm[imgNum] = 1
+
+			'Print frm[imgNum]
+
+			img[imgNum] = _img.GrabImage(xStart[imgNum], yStart[imgNum], w[imgNum] / frm[imgNum], h[imgNum], frm[imgNum])
+			img[imgNum].SetHandle( pivotX[imgNum] / frm[imgNum], pivotY[imgNum] )
 
 			imgNum += 1
 
@@ -90,6 +99,14 @@ Class atlasClass
 	End
 
 	Method Deinit:Void()
+		
+		'Print "deinit atlas " + _path
+
+		For Local i:Int = 0 Until cnt
+
+			img[i].Discard()
+
+		Next
 
 		_img.Discard()
 

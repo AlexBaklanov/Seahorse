@@ -78,7 +78,7 @@ Function LoadGeneralFiles:Void()
 
 End
 
-Function DrawFont:Void(str_font:String, fontX:Int, fontY:Int, center:Bool, size:Float=100.0, kern# = fontKern*Retina)
+Function DrawFont:Void(str_font:String, fontX:Float, fontY:Float, center:Bool, size:Float=100.0, kern# = fontKern*Retina)
 	
 	Local str_font_length:Float = str_font.Length
 	'kerning_local = kern
@@ -91,7 +91,13 @@ Function DrawFont:Void(str_font:String, fontX:Int, fontY:Int, center:Bool, size:
 			
 		Else
 		
-			If str_font[fs]>31 DrawImage(font, fontX - (str_font_length*(kern*(size/100.0)))/2.0 + Float(fs)*kern*(size/100.0), fontY, 0, (size/100.0), (size/100.0), str_font[fs]-32)
+			If str_font[fs]>31 DrawImage(	font, 
+											fontX - (str_font_length*(kern*(size/100.0)))/2.0 + Float(fs)*kern*(size/100.0), 
+											fontY, 
+											0, 
+											(size/100.0), 
+											(size/100.0), 
+											str_font[fs]-32)
 			
 		Endif
 				
@@ -99,25 +105,20 @@ Function DrawFont:Void(str_font:String, fontX:Int, fontY:Int, center:Bool, size:
 	
 End
 
+'d8888b. db    db d888888b d888888b  .d88b.  d8b   db 
+'88  `8D 88    88 `~~88~~' `~~88~~' .8P  Y8. 888o  88 
+'88oooY' 88    88    88       88    88    88 88V8o 88 
+'88~~~b. 88    88    88       88    88    88 88 V8o88 
+'88   8D 88b  d88    88       88    `8b  d8' 88  V888 
+'Y8888P' ~Y8888P'    YP       YP     `Y88P'  VP   V8P 
+
 Global bm:Int = 18
 Global bh:Int = 48
 
+Class Button
 
-'8 888888888o   8 8888      88 8888888 8888888888 8888888 8888888888 ,o888888o.     b.             8    d888888o.   
-'8 8888    `88. 8 8888      88       8 8888             8 8888    . 8888     `88.   888o.          8  .`8888:' `88. 
-'8 8888     `88 8 8888      88       8 8888             8 8888   ,8 8888       `8b  Y88888o.       8  8.`8888.   Y8 
-'8 8888     ,88 8 8888      88       8 8888             8 8888   88 8888        `8b .`Y888888o.    8  `8.`8888.     
-'8 8888.   ,88' 8 8888      88       8 8888             8 8888   88 8888         88 8o. `Y888888o. 8   `8.`8888.    
-'8 8888888888   8 8888      88       8 8888             8 8888   88 8888         88 8`Y8o. `Y88888o8    `8.`8888.   
-'8 8888    `88. 8 8888      88       8 8888             8 8888   88 8888        ,8P 8   `Y8o. `Y8888     `8.`8888.  
-'8 8888      88 ` 8888     ,8P       8 8888             8 8888   `8 8888       ,8P  8      `Y8o. `Y8 8b   `8.`8888. 
-'8 8888    ,88'   8888   ,d8P        8 8888             8 8888    ` 8888     ,88'   8         `Y8o.` `8b.  ;8.`8888 
-'8 888888888P      `Y88888P'         8 8888             8 8888       `8888888P'     8            `Yo  `Y8888P ,88P' 
-
-Class Buttons
-
-	Field x:Float, y:Float
-	Field Width:Int, Height:Int
+	Field x:Float, y:Float, px:Int, py:Int
+	Field w:Int, h:Int
 
 	Field text:String
 	Field textLength:Int
@@ -132,35 +133,41 @@ Class Buttons
 	
 	Field bubblesReady:Bool
 
-	Method Init:Void(theText:String, otherImg:String = "", w:Int = 1, h:Int = 1, theType:Int = 1, img:Image = Null, theFrame:Int = 0 )
+	Method Init:Void(theText:String, otherImg:String = "", theW:Int = 1, theH:Int = 1, theType:Int = 1, img:Image = Null, theFrame:Int = 0 )
 
 		type = theType
 
 		If otherImg = ""
 			i = btn
 			other = False
+			If type = 3
+				i = img
+				other = True
+			End
 		Else
 			If type = 1 i = LoadImage(otherImg+"_btn"+loadadd+".png", 2)
 			If type = 2 i = LoadImage(otherImg+"_btn"+loadadd+".png")
-			If type = 3 i = img
 			other = True
 		End
 
 		frame = theFrame
 
-		Width = w
+		w = theW
 
-		If w = 1 Width = i.Width()
+		If theW = 1 w = i.Width()
 
-		Height = h
+		h = theH
 
-		If h = 1 Height = i.Height()
+		If theH = 1 h = i.Height()
+
+		px = i.HandleX()
+		py = i.HandleY()
 
 		text = theText
 		textLength = text.Length()
 
 		If textLength*fontKern*Retina < 192*Retina And other = False
-			Width = textLength*fontKern*Retina + bh*Retina
+			w = textLength * fontKern * Retina + bh * Retina
 		End
 
 		x = -10000
@@ -202,17 +209,15 @@ Class Buttons
 		End
 
 		'SetColor(0,180,255)
-		DrawFont(text, x + Width/2 + Int(Down)*Retina, y + Height/2 + Int(Down)*Retina, True, textScl*100)
+		DrawFont(text, x + w/2 + Int(Down)*Retina, y + h/2 + Int(Down)*Retina, True, textScl*100)
 		'White()
 
 	End
 
 	Method Pressed:Bool()
 
-		If TouchDown(0) And TouchX() > x And TouchX() < x + Width*btnScale And TouchY() > y And TouchY() < y + Height*btnScale
+		If TouchDown(0) And TouchX() > x - px And TouchX() < x - px + w * btnScale And TouchY() > y - py And TouchY() < y - py + h * btnScale
 			Down = True
-			'If bubblesReady CreateButtonBubbles(x,y)
-			'bubblesReady = False
 			Return False
 		Endif
 
@@ -239,6 +244,13 @@ Class Buttons
 
 End
 
+'db   d8b   db d888888b d8b   db d8888b.  .d88b.  db   d8b   db 
+'88   I8I   88   `88'   888o  88 88  `8D .8P  Y8. 88   I8I   88 
+'88   I8I   88    88    88V8o 88 88   88 88    88 88   I8I   88 
+'Y8   I8I   88    88    88 V8o88 88   88 88    88 Y8   I8I   88 
+'`8b d8'8b d8'   .88.   88  V888 88  .8D `8b  d8' `8b d8'8b d8' 
+' `8b8' `8d8'  Y888888P VP   V8P Y8888D'  `Y88P'   `8b8' `8d8' 
+
 Function CreateButtonBubbles:Void()
 	For Local bbb:Int = 1 To 5
 		CreateBubbles( TouchX() + Rnd(-30, 30)*Retina, TouchY() + Rnd(-30, 30)*Retina )
@@ -251,7 +263,7 @@ Global winResult:Int
 
 Class windowClass
 	
-	Field btns:Buttons[] = []
+	Field btns:Button[] = []
 
 	Field head:String
 	Field text:String
@@ -264,7 +276,7 @@ Class windowClass
 
 		For Local bt:Int = 0 To theBtns.Length() - 1
 
-			btns[bt] = New Buttons
+			btns[bt] = New Button
 			btns[bt].Init(theBtns[bt])
 
 		Next
@@ -303,7 +315,7 @@ Class windowClass
 
 		For Local bt:Int = 0 To btns.Length() - 1
 
-			btns[bt].Draw( dw/(btns.Length() + 1) * (bt+1) - btns[bt].Width/2, dh/2 + windowImg.Height()/2 - btns[bt].Height )
+			btns[bt].Draw( dw/(btns.Length() + 1) * (bt+1) - btns[bt].w/2, dh/2 + windowImg.Height()/2 - btns[bt].h )
 
 		Next
 
@@ -358,34 +370,95 @@ Function Distance:Float(firstObjectX:Float, firstObjectY:Float, secondObjectX:Fl
 
 End
 
+'.d8888. db   d8b   db d888888b d8888b. d88888b 
+'88'  YP 88   I8I   88   `88'   88  `8D 88'     
+'`8bo.   88   I8I   88    88    88oodD' 88ooooo 
+'  `Y8b. Y8   I8I   88    88    88~~~   88~~~~~ 
+'db   8D `8b d8'8b d8'   .88.   88      88.     
+'`8888Y'  `8b8' `8d8'  Y888888P 88      Y88888P 
+
 Global swipeTime:Int
 Global swipeX:Float
+Global swipeY:Float
 
-Function Swipe:Bool()
+Global swipeLength:Int = 50
 
-	If TouchDown(0) And alive
+Const swipeLeft:Int = 1
+Const swipeRight:Int = 2
+Const swipeUp:Int = 3
+Const swipeDown:Int = 4
+Const touch:Int = 5
+
+'Global controlTouch:Int
+
+Function ControlTouch:Int()
+
+	If TouchDown(0)
 
 		swipeTime += 1
 
 		If swipeX = 0 swipeX = TouchX()
+		If swipeY = 0 swipeY = TouchY()
 
 		Return False
 
 	End
 
-	If swipeTime > 0 And swipeTime < 50 And TouchX() > swipeX + 100*Retina
+	If swipeTime > 0 And swipeTime < 50 
+
+		If TouchY() < swipeY - swipeLength * Retina
+
+			swipeTime = 0
+			swipeX = 0
+			swipeY = 0
+
+			'Print swipeUp
+			Return swipeUp
+
+		End
+
+		If TouchY() > swipeY + swipeLength * Retina
+
+			swipeTime = 0
+			swipeX = 0
+			swipeY = 0
+
+			Return swipeDown
+
+		End
+
+		If TouchX() > swipeX + swipeLength * Retina
+
+			swipeTime = 0
+			swipeX = 0
+			swipeY = 0
+
+			Return swipeRight
+
+		End
+
+		If TouchX() < swipeX - swipeLength * Retina
+
+			swipeTime = 0
+			swipeX = 0
+			swipeY = 0
+
+			Return swipeLeft
+
+		End
 
 		swipeTime = 0
+		swipeY = 0
 		swipeX = 0
 
-		Return True
+		Return touch
 
 	End
 
 	swipeTime = 0
-	swipeX = 0
+	swipeY = 0
 
-	Return False
+	Return 0
 
 End
 
@@ -413,20 +486,6 @@ Function White:Void()
 	SetColor(255,255,255)
 End
 
-Global somethingIsSliding:Bool
-
-Function SlideThe:Int(param:Int, maxAmount:Int = 100, spd:Int = 1)
-
-	somethingIsSliding = True
-
-	param += spd
-
-	If param > maxAmount somethingIsSliding = False
-
-	Return param
-
-End
-
 Global globalTime:Int
 Global gtCounter:Int
 
@@ -447,131 +506,6 @@ Function DrawFadeBgr:Void()
 	SetAlpha(.3)
 	DrawImage (fadeImg, dw/2, dh/2, 0, 512*Retina, 384*Retina )
 	SetAlpha(1)
-
-End
-
-Global animation := New List<animationClass>
-
-Class animationClass
-
-	Field img:Image
-
-	Field x:Float, y:Float
-
-	Field type:Int
-
-	Field animCounter:Float, animSpeed:Float
-
-	Field frame:Int, frameCount:Int
-	
-	Field isAnimationEnabled:Bool
-	
-	Method Init:Void(animImg:Image, ax:Float, ay:Float, animSpd:Float, theType:Int = 1, frameCnt:Int)
-
-		img = animImg
-
-		frameCount = frameCnt - 1
-		
-
-		isAnimationEnabled = True
-
-		x = ax
-		y = ay
-
-		animSpeed = animSpd
-		type = theType
-
-	End
-
-	Method Update:Void()
-
-		If isAnimationEnabled
-
-			animCounter += animSpeed
-
-			Select type
-
-				Case 1 'Loop
-					If animCounter > frameCount animCounter = 0
-
-				Case 2 'One shot
-					If animCounter > frameCount animCounter = 0 animSpeed = 0 isAnimationEnabled = False
-
-				Case 3 'ping-pong
-					If animCounter > frameCount
-						animCounter = frameCount
-						animSpeed = -animSpeed
-					End
-					If animCounter < 0
-						animCounter = 0
-						animSpeed = -animSpeed
-					End
-
-				Case 4 'One shot and delete
-					If animCounter > frameCount
-						animCounter = 0
-						animSpeed = 0
-						animation.Remove(Self)
-					End
-
-			End
-
-		End
-
-	End
-
-	Method Draw:Void()
-
-		If isAnimationEnabled
-			frame = animCounter
-			DrawImage( img, x, y, frame )
-		End
-
-	End
-
-End
-
-Function LoadAnimation:Image(name:String, frameCnt:Int, mid:Bool = True)
-
-	Local img:Image
-
-	If mid
-		img = LoadImage( name + "" + loadadd + ".png", frameCnt, Image.MidHandle )
-	Else
-		img = LoadImage( name + "" + loadadd + ".png", frameCnt )
-	End
-
-	Return img
-
-End
-
-Function Animate:Void(animImg:Image, ax:Float, ay:Float, animSpd:Float, theType:Int = 1)
-
-	Local frameCnt:Int = animImg.Frames()
-
-	Local anm := New animationClass
-	anm.Init(animImg, ax, ay, animSpd, theType, frameCnt)
-	animation.AddLast(anm)
-
-End
-
-Function DrawAllAnimations:Void()
-
-	For Local anms := Eachin animation
-		
-		anms.Draw()
-		
-	End
-
-End
-
-Function UpdateAllAnimations:Void()
-
-	For Local anms := Eachin animation
-		
-		anms.Update()
-		
-	End
 
 End
 

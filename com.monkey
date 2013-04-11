@@ -4,7 +4,7 @@ Import imp
 
 Global comix := New ComixClass
 
-Global skipBtn := New Buttons
+Global skipBtn := New Button
 
 Class ComixClass
 	
@@ -76,7 +76,7 @@ Class ComixClass
 
 		DrawImage( img, imgX, dh/2 + movIP, 0, retinaScl * sclIP, retinaScl * sclIP )
 		
-		skipBtn.Draw(dw - 10*Retina - skipBtn.Width, dh - 10*Retina - skipBtn.Height )
+		skipBtn.Draw(dw - 10*Retina - skipBtn.w, dh - 10*Retina - skipBtn.h )
 
 		SetAlpha(fadeAlpha)
 		SetColor(0,0,0)

@@ -45,7 +45,7 @@ Class bonusesClass
 
 		closeToHero = hero.x + 15*Retina + img[1].Width() + magnet * Retina
 		
-		If weaponActivated[14] magnet = 80
+		If weaponPurchased[13] magnet = 80
 
 	End
 
@@ -91,7 +91,7 @@ Class bonusesClass
 
 			End
 
-			If (weaponActivated[6] Or weaponActivated[14] Or friendMode) And weaponHyperJump.active <> 1 MagnetHandle(bo)
+			If (weaponPurchased[5] Or weaponPurchased[13] Or friendMode) And weaponHyperJump.active <> 1 MagnetHandle(bo)
 
 		Next
 

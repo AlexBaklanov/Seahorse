@@ -16,7 +16,7 @@ Global mainGame:mainGameClass = New mainGameClass
 
 Class mainGameClass
 
-	Field skip1000 := New Buttons
+	Field skip1000 := New Button
 
 	'd888888b d8b   db d888888b d888888b 
 	'  `88'   888o  88   `88'   `~~88~~' 
@@ -157,7 +157,7 @@ Class mainGameClass
 		If pauseMode DrawPause()
 
 		SetAlpha(0)
-		skip1000.Draw(dw - skip1000.Width - 200*Retina, 0)
+		skip1000.Draw(dw - skip1000.w - 200*Retina, 0)
 		SetAlpha(1)
 
 	End

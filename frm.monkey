@@ -76,6 +76,12 @@ Class framesClass
 
 	End
 
+	Method Deinit:Void()
+
+		
+
+	End
+
 End
 
 

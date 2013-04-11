@@ -6,7 +6,6 @@ Global GameOverMode:Bool
 
 Global progressBgr:Image
 Global progressYou:Image
-Global progressWay:Image
 
 Global youX:Float
 Global youY:Float
@@ -29,7 +28,7 @@ Global distanceGUI:Int
 Global distanceGUILast:Float
 Global distGUIfont:String
 
-Global go_Shop_btn:Buttons = New Buttons
+Global go_Shop_btn := New Button
 
 	'd888888b d8b   db d888888b d888888b 
 	'  `88'   888o  88   `88'   `~~88~~' 
@@ -57,7 +56,6 @@ Function GameOverInit:Void()
 
 	progressBgr = LoadImage( "progress_bgr" +  loadadd + ".png", 1, Image.MidHandle )
 	progressYou = LoadImage( "progress_you" +  loadadd + ".png", 1, Image.MidHandle )
-	progressWay = LoadImage( "progress_way" +  loadadd + ".png" )
 	progressBgrScale = 0.0
 	progressBgrScaleSpd = .12
 	progressBgrScaleStop = False
@@ -87,9 +85,6 @@ Function GameOverDraw:Void()
 	
 	'Bgr
 	DrawImage( progressBgr, dw/2, progressHeight, 0, progressBgrScale, progressBgrScale )
-	
-	'New way
-	'DrawImageRect( progressWay, dw/2 - distGUILenght*Retina/2, progressHeight, 0, 0, distanceGUI, progressWay.Height() )
 
 	If distanceGUI > distanceGUILast And youFinalStop And progressBgrScaleStop
 		
@@ -110,7 +105,7 @@ Function GameOverDraw:Void()
 	DrawImage( progressYou, dw/2 - distGUILenght*Retina/2 + distanceGUILast, youY, 0, progressBgrScale, progressBgrScale )
 	SetAlpha(1)
 	
-	If youFinalStop And progressBgrScaleStop go_Shop_btn.Draw 	( dw - go_Shop_btn.Width, dh - go_Shop_btn.Height )
+	If youFinalStop And progressBgrScaleStop go_Shop_btn.Draw 	( dw - go_Shop_btn.w, dh - go_Shop_btn.h )
 	
 	'text "You need some rest"
 	DrawFont( textID[5], 			dw/2, 30*Retina, True )
@@ -200,7 +195,6 @@ Function GameOverDeinit:Void()
 
 	progressBgr.Discard()
 	progressYou.Discard()
-	progressWay.Discard()
 
 	go_Shop_btn.Deinit()
 
@@ -311,8 +305,8 @@ Global crabPreviousHideY:Int
 
 Function CrabPreviousInit:Void()
 
-	crabImg.Init("hero/crab/img" + loadadd + ".png" ) 
-	crabAnim.Init("hero/crab/", crabImg)
+	'crabImg.Init("hero/crab/img" + loadadd + ".png") 
+	crabAnim.Init("hero/crab/")
 	crabY = dh + 5 * Retina
 
 	crabPreviousImg = LoadImage ( "hero/finish" + loadadd + ".png" )

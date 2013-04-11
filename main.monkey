@@ -40,7 +40,7 @@ Class GameGW Extends App
 				If coords = True coords = False Else coords = True
 			Endif
 			
-			UpdateAllAnimations()
+			'UpdateAllAnimations()
 			
 			UpdateBubbles()
 			
@@ -96,7 +96,7 @@ Class GameGW Extends App
 			
 			End
 			
-			DrawAllAnimations()
+			'DrawAllAnimations()
 			
 			WindowsRender()
 			

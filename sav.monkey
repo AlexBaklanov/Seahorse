@@ -91,7 +91,7 @@ Function SaveGame:Void()
 
 	For Local ws:Int = 100 To 128
 
-		If weaponActivated[ ws - 99 ]
+		If weaponPurchased[ ws - 100 ]
 			addParam( 1 )
 		Else
 			addParam ( 0 )
@@ -203,7 +203,7 @@ Function LoadGame:Void()
 		'weapons
 		For Local ws:Int = 100 To 128
 
-			If paramLine[ws] = 1 weaponActivated[ ws - 99 ] = True Else weaponActivated[ ws - 99 ] = False
+			If paramLine[ws] = 1 weaponPurchased[ ws - 100 ] = True Else weaponPurchased[ ws - 100 ] = False
 
 		Next
 
@@ -304,7 +304,7 @@ Function ResetGame:Void()
 	'weapons
 	For Local ws:Int = 100 To 128
 
-		weaponActivated[ws - 99] = False
+		weaponPurchased[ws - 100] = False
 
 	Next
 

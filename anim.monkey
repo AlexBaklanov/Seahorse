@@ -6,21 +6,26 @@ Const STOP:Int = 0, LOOP:Int = 1, ONE_SHOT:Int = 2
 
 Class animClass
 
-	Field img:atlasClass, frm:framesClass
+	Field img:atlasClass, selfImage:Bool
 	Field f:Int, paused:Bool
-	Field type:Int
-	Field partX:Float[10000], partY:Float[10000]
-	Field partRot:Float[10000], partSclX:Float[10000], partSclY:Float[10000]
-	Field keyFrameMove:Bool[941], keyFrameRot:Bool[941], keyFrameScl:Bool[941], frameCnt:Int, curFrame:Int, lastFrame:Int
+	Field type:Int, _path:String
+	Field partX:Float[0], partY:Float[0]
+	Field partRot:Float[0], partSclX:Float[0], partSclY:Float[0]
+	Field keyFrameMove:Bool[0], keyFrameRot:Bool[0], keyFrameScl:Bool[0], frameCnt:Int, curFrame:Int, lastFrame:Int, frm:framesClass
 
 
 	Method Init:Void(path:String, theImg:atlasClass = Null, theFrames:framesClass = Null)
+
+		_path = path
+
+		'Print "load anim " + path
 
 		type = STOP
 
 		If theImg = Null
 			img = New atlasClass
 			img.Init(path + "img" + loadadd + ".png")
+			selfImage = True
 		Else
 			img = theImg
 		End
@@ -32,11 +37,24 @@ Class animClass
 			frm = theFrames
 		End
 
-		'Print frm.frameCnt
+		lastFrame = frm.lastFrame
+		frameCnt = frm.frameCnt
+
+		Local arrSize:Int = img.cnt + lastFrame * 10 + 1
+
+		partX = partX.Resize(arrSize)
+		partY = partY.Resize(arrSize)
+		partRot = partRot.Resize(arrSize)
+		partSclX = partSclX.Resize(arrSize)
+		partSclY = partSclY.Resize(arrSize)
+
+		keyFrameMove = keyFrameMove.Resize(lastFrame + 1)
+		keyFrameRot = keyFrameRot.Resize(lastFrame + 1)
+		keyFrameScl = keyFrameScl.Resize(lastFrame + 1)
 
 		For Local p:Int = 0 Until img.cnt
 
-			For Local f:Int = 0 To 940
+			For Local f:Int = 0 To lastFrame
 
 				keyFrameMove[f] = frm.keyFrameMove[f]
 				keyFrameRot[f] = frm.keyFrameRot[f]
@@ -47,9 +65,6 @@ Class animClass
 				partRot[ p + f * 10 ] = frm.partRot[ p + f * 10 ]
 				partSclX[ p + f * 10 ] = frm.partSclX[ p + f * 10 ]
 				partSclY[ p + f * 10 ] = frm.partSclY[ p + f * 10 ]
-
-				lastFrame = frm.lastFrame
-				frameCnt = frm.frameCnt
 
 			Next
 
@@ -169,7 +184,7 @@ Class animClass
 
 	Method NextKey:Int(kfType:Int)
 
-		For Local fr:Int = curFrame To 940
+		For Local fr:Int = curFrame To lastFrame
 
 			If kfType = 0 And keyFrameMove[fr] Return fr
 			If kfType = 1 And keyFrameRot[fr] Return fr
@@ -209,7 +224,11 @@ Class animClass
 
 	Method Deinit:Void()
 
-		img.Deinit()
+		'Print "deinit anim " + _path
+
+		If selfImage
+			img.Deinit()
+		End
 
 	End
 

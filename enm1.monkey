@@ -57,26 +57,26 @@ Class enemyClass
 
 	Field w:Int, h:Int
 
-	Field enemyAnim:animClass
+	Field enemyAnim := New animClass
 
 	Method Init:Void(theType:Int, nextVar:Int = 0)
 
-			type = theType
+		type = theType
+		radius = 50 * Retina
+
+		rot = Rnd(0,360)
+		sclX = Rnd( Float(enemyScale[theType][6..9]), Float(enemyScale[theType][12..15]) )
+		sclY = sclX
+		spd = Rnd( Float(enemySpeed[theType][6..9]), Float(enemySpeed[theType][12..15]) )
+		anim = Rnd( Int(enemyAnm[theType][5..7]), Int(enemyAnm[theType][8..10]) )
+		rotSpeed = Rnd(-enemyRotSpeed[theType], enemyRotSpeed[theType])
+		damage = enemyDamage[theType]
+		yMove = Rnd(-enemyYMove[theType], enemyYMove[theType])
+
+
+		If type <> 2 And type <> 3 And type <> 6
+
 			img = enemies.img[type]
-			radius = 1
-
-			rot = Rnd(0,360)
-			sclX = Rnd( Float(enemyScale[theType][6..9]), Float(enemyScale[theType][12..15]) )
-			sclY = sclX
-			spd = Rnd( Float(enemySpeed[theType][6..9]), Float(enemySpeed[theType][12..15]) )
-			anim = Rnd( Int(enemyAnm[theType][5..7]), Int(enemyAnm[theType][8..10]) )
-			rotSpeed = Rnd(-enemyRotSpeed[theType], enemyRotSpeed[theType])
-			damage = enemyDamage[theType]
-			yMove = Rnd(-enemyYMove[theType], enemyYMove[theType])
-
-
-		If type <> 2 And type <> 6
-
 			x = dw + img.Width()
 			y = Rnd(0,dh)
 			w = img.Width()
@@ -89,9 +89,8 @@ Class enemyClass
 
 		Select type
 
-			Case 2, 6
+			Case 2, 3, 6
 
-				enemyAnim = New animClass
 				enemyAnim.Init("enemies/enemy" + zeroAdd + "" + type + "/", enemyImg[type], enemyFrm[type])
 				enemyAnim.Play(LOOP)
 				xMove = -.2
@@ -101,6 +100,7 @@ Class enemyClass
 				y = Rnd(0,dh)
 				pivotX = enemyAnim.partX[0]
 				pivotY = enemyAnim.partY[0]
+				img = enemyImg[type].img[0]
 
 			'one legged crab'
 			Case 3
@@ -108,7 +108,6 @@ Class enemyClass
 				swimForce = -1
 				swimNegPosRnd = -1
 				y = Rnd( dh/2, dh*2 )
-				radius = .8
 
 			'crab otshelnik'
 			Case 4
@@ -135,7 +134,6 @@ Class enemyClass
 			'meduze'
 			Case 8
 				frame = Rnd(0,3)
-				radius = .75
 
 			'malki 2'
 			Case 9
@@ -155,7 +153,6 @@ Class enemyClass
 			Case 11
 				rot = yMove * 5
 				fixedSpeed = True
-				radius = .8
 
 			'white meduze'
 			Case 12
@@ -163,7 +160,6 @@ Class enemyClass
 				rot = 0
 				y = Rnd(dh/5,dh + dh/5)
 				yStart = y + 10.0
-				radius = .5
 
 			'sparks
 			Case 13
@@ -198,7 +194,6 @@ Class enemyClass
 					y = dh
 					yForce = -1
 				End
-				radius = .8
 
 			'nautilus new'
 			Case 20
@@ -215,7 +210,6 @@ Class enemyClass
 			Case 22
 				rot = yMove * 5 + 10
 				fixedSpeed = True
-				radius = .6
 
 			'half shell'
 			Case 23
@@ -240,7 +234,6 @@ Class enemyClass
 			'ball of grass'
 			Case 25
 				rot = 0
-				radius = .8
 				
 
 			'shark
@@ -252,7 +245,6 @@ Class enemyClass
 			'dark udilshik
 			Case 27
 				rot = 0
-				radius = .5
 				animSpd = .2
 
 			'meduze'
@@ -267,7 +259,6 @@ Class enemyClass
 			Case 30
 				rot = 0
 				swimForce = -1
-				radius = .6
 
 		End
 
@@ -277,7 +268,7 @@ Class enemyClass
 
 		Select type
 
-			Case 2, 6
+			Case 2, 3, 6
 
 				enemyAnim.Draw(x, y)
 
@@ -289,7 +280,7 @@ Class enemyClass
 
 		End
 		
-		If enemyRadiusEnabled SetAlpha(.2) DrawCircle (pivotX,pivotY,w/2*radius*sclX) SetAlpha(1)
+		If enemyRadiusEnabled SetAlpha(.2) DrawCircle (pivotX, pivotY, radius*sclX) SetAlpha(1)
 		'DrawText(enemyAnm.partSclX[5], x+20, y+20)
 	End
 
@@ -1017,6 +1008,12 @@ Class enemyClass
 				rot += 10 * swimX
 
 		End 
+
+	End
+
+	Method Deinit:Void()
+
+		If enemyAnim <> Null enemyAnim.Deinit()
 
 	End
 
