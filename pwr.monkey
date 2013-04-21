@@ -17,8 +17,8 @@ Global cancel_btn := New Button
 
 Global powersText:String[29]
 Global powerButton:Button[29]
-Global powerButtonW:Int = 64
-Global powerButtonH:Int = 71
+Global powerButtonW:Int
+Global powerButtonH:Int
 Global powersPic:Image
 
 Global powerIconForeground:Image
@@ -54,6 +54,9 @@ Function PowersCreate:Void()
 
 	Next
 
+	powerButtonW = 64 * Retina
+	powerButtonH = 71 * Retina
+
 	curPowerWindow = -1
 
 	isAnyPowerAvailable = False
@@ -71,6 +74,8 @@ Function PowersCreate:Void()
 
 	Next
 
+	curPowerMoved = -1
+
 End
 
 	'db    db d8888b. d8888b.  .d8b.  d888888b d88888b 
@@ -82,6 +87,7 @@ End
 
 Global touchDownTime:Float
 
+Global curPowerMoved:Int, curPowerHovered:Int, powerMoveStart:Bool, powerMoveTime:Int, powerToMove:Int, powerMoveTo:Int
 
 Function PowersUpdate:Void()
 
@@ -174,9 +180,76 @@ Function PowersUpdate:Void()
 
 	For Local pw:Int = 0 Until 21
 
-		If powerButton[pw].Pressed()
+		If TouchDown(0)
 
-			curPowerWindow = pw
+			'If powerMoveStart = False
+
+				powerMoveTime += 1
+				'powerMoveStart = True
+
+			'End
+
+			If powerMoveTime > 500
+
+				If TouchX() > powerButton[wn[pw]].x And TouchX() < powerButton[wn[pw]].x + powerButton[wn[pw]].w
+
+					If TouchY() > powerButton[wn[pw]].y And TouchY() < powerButton[wn[pw]].y + powerButton[wn[pw]].h
+
+						If wn[pw] <> curPowerMoved
+							curPowerHovered = wn[pw]
+							powerMoveTo = pw
+						End
+
+						If curPowerMoved = -1 
+							curPowerMoved = wn[pw]
+							powerToMove = pw
+						End
+
+					End
+
+				End
+
+			End
+
+		Else
+
+			If curPowerMoved > -1
+
+				#rem
+				Local toChange:Button
+
+				toChange = powerButton[curPowerMoved]
+				powerButton[curPowerMoved] = powerButton[curPowerHovered]
+				powerButton[curPowerHovered] = toChange
+				#end
+
+				'#rem
+				Local toChangeW:Int
+
+				toChangeW = wn[powerMoveTo]
+				wn[powerMoveTo] = wn[powerToMove]
+				wn[powerToMove] = toChangeW
+				'#end
+
+				pbCurX[curPowerHovered] = Int(TouchX() - powerButtonW / 2)
+				pbCurY[curPowerHovered] = Int(TouchY() - powerButtonH / 2)
+
+				powerButton[curPowerMoved].active = False
+				powerButton[curPowerMoved].Down = False
+
+				powerMoveTime = 0
+
+				curPowerMoved = -1
+
+			End
+
+		End
+
+		If curPowerMoved = -1 And powerButton[wn[pw]].Pressed()
+
+			powerMoveTime = 0
+
+			curPowerWindow = wn[pw]
 			
 			winSclActive = True
 			sclWaveMax = 0.2 sclWave = 0 sclWaveSpeed = .15
@@ -185,22 +258,16 @@ Function PowersUpdate:Void()
 			If curPowerWindow < 9 nl = "0"
 			powersPic = LoadImage( "powers/pics/pics" + nl + "" + (curPowerWindow + 1) + "" + retinaStr + ".png", 1, Image.MidHandle )
 
-			'Print "power pressed " + pw
-
 			Exit
 
 		End
 
 	End
 
-	If powersBackBtn.Pressed()
-
-	End
-
 	If powersSlide = 0 And inertiaDone = False
 		'If ChannelState(0) = 0 PlaySound( bottlesSnd, 0 )
 		inertiaAdd += inertiaSpd
-		If inertiaAdd < -5 inertiaAdd = -5 inertiaSpd = 1
+		If inertiaAdd < -5 * Retina inertiaAdd = -5 * Retina inertiaSpd = 1
 		If inertiaAdd > 0 inertiaAdd = 0 inertiaDone = True
 	End
 
@@ -213,19 +280,17 @@ End
 	'88  .8D 88 `88. 88   88 `8b d8'8b d8' 
 	'Y8888D' 88   YD YP   YP  `8b8' `8d8'  
 
-Global pbCols:Int = 7
-Global pbRows:Int = 3
+Global pbCols:Int = 7, pbRows:Int = 3
 
-Global inertiaAdd:Float
-Global inertiaSpd:Float
-Global inertiaDone:Bool
+Global pbCurX:Float[29], pbCurY:Float[29], powerInPlace:Bool[29]
+
+Global inertiaAdd:Float, inertiaSpd:Float, inertiaDone:Bool
 
 Global winSclActive:Bool, amplitude:Float = .3
 Global sclWave:Float, sclWaveSpeed:Float, sclWaveMax:Float
 Global waveBack:Bool, sclAlpha:Float
 
-Global Rt:Int
-Global swimRt:Float
+Global Rt:Int, swimRt:Float
 
 Function PowersDraw:Void()
 	
@@ -241,8 +306,8 @@ Function PowersDraw:Void()
 		Local pbXc:Int
 		Local pbYc:Int
 
-		Local pbX:Float
-		Local pbY:Float
+		Local pbX:Int
+		Local pbY:Int
 
 		Local addWidth:Int = 2 * Retina
 		Local addHeight:Int = 10 * Retina
@@ -257,12 +322,43 @@ Function PowersDraw:Void()
 
 			pbX = powersSlide + dw/2 - Float(pbCols)*( powerButtonW + addWidth )/2.0 + ( powerButtonW + addWidth ) * pbXc
 			pbY = dh - pbRows*( powerButtonH + addHeight ) + ( powerButtonH + addHeight ) * pbYc
-			
+
+			If curPowerMoved = wn[pw]
+
+				pbCurX[wn[pw]] += ((TouchX() - powerButtonW / 2) - pbCurX[wn[pw]]) / 2.0
+				pbCurY[wn[pw]] += ((TouchY() - powerButtonH / 2) - pbCurY[wn[pw]]) / 2.0
+
+			End
+
+			If curPowerMoved = -1
+
+				If Int(pbCurX[wn[pw]]) < pbX - 2 Or Int(pbCurX[wn[pw]]) > pbX + 2 Or Int(pbCurY[wn[pw]]) < pbY - 2 Or Int(pbCurY[wn[pw]]) > pbY + 2
+
+					pbCurX[wn[pw]] += (pbX - pbCurX[wn[pw]]) / 3
+					pbCurY[wn[pw]] += (pbY - pbCurY[wn[pw]]) / 3
+
+				Else
+
+					pbCurX[wn[pw]] = pbX
+					pbCurY[wn[pw]] = pbY
+
+					powerButton[wn[pw]].active = True
+
+				End
+
+			End
+
+			If inertiaDone = False
+
+				pbCurX[wn[pw]] = pbX
+				pbCurY[wn[pw]] = pbY
+
+			End
 
 			'button
-			powerButton[wn[pw]].Draw( pbX + inertiaAddForColumns + 3 * Retina, pbY + 13 * Retina )
-			DrawImage (powerIconForeground, 	pbX + inertiaAddForColumns + 	Int( powerButton[wn[pw]].Down ) * Retina, 
-												pbY + 							Int( powerButton[wn[pw]].Down ) * Retina, 
+			powerButton[wn[pw]].Draw( pbCurX[wn[pw]] + inertiaAddForColumns + 3 * Retina, pbCurY[wn[pw]] + 13 * Retina )
+			DrawImage (powerIconForeground, 	pbCurX[wn[pw]] + inertiaAddForColumns + 	Int( powerButton[wn[pw]].Down ) * Retina, 
+												pbCurY[wn[pw]] + 							Int( powerButton[wn[pw]].Down ) * Retina, 
 												Int(weaponPurchased[wn[pw]]) )
 
 			'active
@@ -271,13 +367,21 @@ Function PowersDraw:Void()
 			End
 
 			'cost
-			DrawFont ( wCostTxt, pbX + powerButton[pw].w/2 + 11*Retina + inertiaAddForColumns, pbY + powerButton[pw].h/6, True, 60 )
+			DrawFont ( 	wCostTxt, 
+						pbCurX[wn[pw]] + powerButton[pw].w / 2 + 17 * Retina + inertiaAddForColumns, 
+						pbCurY[wn[pw]] + powerButton[pw].h / 6 + 2 * Retina, True, 60 )
 
 			pbXc += 1
 			If pbXc > pbCols - 1
 				pbXc = 0
 				pbYc += 1
 			End
+
+			'DrawText(pbCurX[wn[pw]], 30, 15 * pw)
+			'DrawText(pbX, 180, 15 * pw)
+
+			'DrawText(pbCurY[wn[pw]], 250, 15 * pw)
+			'DrawText(pbY, 400, 15 * pw)
 
 		Next
 		
@@ -332,8 +436,8 @@ Function PowersDraw:Void()
 		
 	End
 
-	DrawText(Int(weaponPurchased[3]), 100,100)
-	'DrawText(sclWave, 100,100)
+	'DrawText(curPowerMoved, 100,100)
+	'DrawText(curPowerHovered, 100,140)
 
 End
 

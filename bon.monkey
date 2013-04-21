@@ -10,6 +10,9 @@ Global coinsGame:Int
 
 Global getImg:Image
 
+Global collectorX:Float
+Global collectorY:Float
+
 Class bonusesClass
 
 	Field bonusesCounter:Float, bonusesInterval:Float = 30
@@ -43,24 +46,11 @@ Class bonusesClass
 
 		getImg = LoadImage( "bonus/getCoin" + loadadd + ".png", 1, Image.MidHandle )
 
-		closeToHero = hero.x + 15*Retina + img[1].Width() + magnet * Retina
-		
-		If weaponPurchased[13] magnet = 80
+		closeToHero = hero.x + 15 * Retina + img[1].Width() + magnet * Retina
 
 	End
 
 	Method Update:Void()
-		
-		Local collectorX:Float
-		Local collectorY:Float
-		
-		If friendMode
-			collectorX = hero.x+friendHeroPositionX
-			collectorY = hero.y+friendHeroPositionY
-		Else
-			collectorX = hero.xConcerningToHero
-			collectorY = hero.yConcerningToHero
-		End
 		
 		If GameOverMode = False And isStreamActive = False bonusesCounter -= 1
 		If bonusesCounter < 0 RequestBonus()
@@ -69,23 +59,27 @@ Class bonusesClass
 
 			bo.Update()
 
-			'OUT of SCREEN'
-			If bo.x < -1 * bo.img.Width() Or bo.y < -1 * bo.img.Height() Or bo.y > dh + bo.img.Width()
-				bonus.Remove(bo)
-			End
+			If bo.x < dw/2
 
-			If weaponHyperJump.active <> 1 And bo.x < closeToHero
+				'OUT of SCREEN'
+				If bo.x < -1 * bo.img.Width() Or bo.y < -1 * bo.h Or bo.y > dh + bo.w
+					bonus.Remove(bo)
+				End
 
-				'COLLISION'
-				If Distance(bo.x, bo.y, collectorX, collectorY) < 15*Retina + bo.img.Width() * bo.sclX / 2
+				If weaponHyperJump.active <> 1 And bo.x < closeToHero
 
-					If bo.inactive = False
-						bonus.Remove(bo)
+					'COLLISION'
+					If Distance(bo.x, bo.y, collectorX, collectorY) < bo.w * bo.sclX * 1.5
+
+						If bo.inactive = False
+							bonus.Remove(bo)
+						End
+
+						'health += bo.healing
+						coinsGame += bo.coin
+						If bo.coin > 0 And coinsIndicatorCount < 4 CreateCoinsIndicator(bo.coin, bo.x, bo.y)
+
 					End
-
-					health += bo.healing
-					coinsGame += bo.coin
-					If bo.coin > 0 CreateCoinsIndicator(bo.coin, bo.x, bo.y)
 
 				End
 
@@ -94,6 +88,8 @@ Class bonusesClass
 			If (weaponPurchased[5] Or weaponPurchased[13] Or friendMode) And weaponHyperJump.active <> 1 MagnetHandle(bo)
 
 		Next
+
+		UpdateCoinsIndicator()
 
 	End
 
@@ -105,7 +101,7 @@ Class bonusesClass
 
 		Next
 
-		'DrawText(bonusesCounter, 20,20)
+		'DrawText(coinsIndicatorCount, 140,140)
 
 	End
 
@@ -120,6 +116,9 @@ Class bonusesClass
 		Next
 
 		getImg.Discard()
+
+		coinsIndicator.Clear()
+		coinsIndicatorCount = 0
 
 	End
 
@@ -177,20 +176,15 @@ Global rnbo:Int
 
 Class bonusClass
 	
-	Field x:Float, y:Float
-
+	Field x:Float, y:Float, w:Int, h:Int
 	Field yWave:Float, yForce:Int
-
 	Field xMove:Float, yMove:Float
 
 	Field lifeTime:Int
-
 	Field swimX:Float, swimForce:Float, swimNegPosRnd:Int
 
 	Field rot:Float, rotSpeed:Float
-
 	Field sclX:Float, sclY:Float
-
 	Field sclStart:Float
 
 	Field spd:Float
@@ -217,21 +211,23 @@ Class bonusClass
 		x = theX
 		y = theY
 
+		w = img.Width()
+		h = img.Height()
+
 		lifeTime = 100
 
 		If type <> 3
 
-		If theX = 0 x = dw + img.Width()
-		If theY = 0 y = Rnd(dh/10, dh - dh/10)
+			If theX = 0 x = dw + img.Width()
+			If theY = 0 y = Rnd(dh/10, dh - dh/10)
 
 		End
 
-		rot = Rnd(0,360)
+		rot = 0'Rnd(0,360)
 		sclX = 1
 		sclY = 1
 
-		spd = 1
-
+		anim = Rnd(0,20)
 		healing = 0
 		coin = 0
 		
@@ -242,31 +238,19 @@ Class bonusClass
 
 		' global coins speed
 		Local coins_speed:Float = Rnd(.9, 1.1)
+		spd = coins_speed
 
 		Select theType
 
 			'coins'
 			Case 1
-
-				rot = 0
 				coin = 1
 
-				spd = coins_speed
-
-				anim = Rnd(0,20)
-
 			Case 2
-
 				coin = 5
-
-				spd = coins_speed
-
-				anim = Rnd(0,20)
 
 			' bubbles
 			Case 3
-
-				spd = coins_speed
 				rot = 0
 				sclX = Rnd(.3, .7)
 				sclY = sclX
@@ -275,41 +259,24 @@ Class bonusClass
 				inactive = True
 
 			Case 4
-
 				coin = 10
 
-				spd = 1.2
-
-				anim = Rnd(0,20)
-
 			Case 5
-
 				coin = 15
-				spd = coins_speed
-				anim = Rnd(0,20)
 
 			Case 6
-
 				coin = 20
-				spd = coins_speed
-				anim = Rnd(0,20)
 
 			Case 7
-
 				coin = 25
-				spd = coins_speed
-				anim = Rnd(0,20)
 				
 			Case 8
-
 				coin = 30
-				spd = coins_speed
-				anim = Rnd(0,20)
-				
+			
+			'black goo'
 			Case 9
 			
 				rot = 0
-				
 				coin = 0
 				spd = 0
 				x = hero.xConcerningToHero
@@ -327,10 +294,7 @@ Class bonusClass
 				inactive = True
 				
 			Case 10
-
 				coin = 40
-				spd = coins_speed
-				anim = Rnd(0,20)
 
 		End
 
@@ -349,7 +313,6 @@ Class bonusClass
 	Method Update:Void()
 
 		x -= spd * Retina * globalSpeed
-		
 		x += xMove * Retina
 		y += yMove * Retina
 
@@ -383,26 +346,22 @@ Class bonusClass
 
 End
 
-Global magnet:Int = 40
+Global magnet:Int
 Global magnetSpeed:Float = .9
 
-Function MagnetHandle:Void(bo:bonusClass)
-	
-	Local collectorX:Float
-	Local collectorY:Float
-	
-	If friendMode
-		collectorX = hero.x+friendHeroPositionX
-		collectorY = hero.y+friendHeroPositionY
-	Else
-		collectorX = hero.xConcerningToHero
-		collectorY = hero.yConcerningToHero
-	End
-		
-	If bo.isMagnetted = False And bo.theType <> 3 And bo.theType <> 9 And Sqrt( Pow( (bo.x - collectorX), 2 ) + Pow( (bo.y - collectorY), 2 ) ) < 15*Retina + bo.img.Width() * bo.sclX / 2 + magnet * Retina
+Const WEAK_MAGNET:Int = 80
+Const STRONG_MAGNET:Int = 120
 
-		bo.isMagnetted = True
-		bo.spd = 0
+Function MagnetHandle:Void(bo:bonusClass)
+		
+	If bo.isMagnetted = False And bo.theType <> 3 And bo.theType <> 9 
+
+		If Distance(bo.x, bo.y, collectorX, collectorY) < magnet
+
+			bo.isMagnetted = True
+			bo.spd = 0
+
+		End
 
 	End
 
@@ -420,6 +379,7 @@ End
 
 
 Global coinsIndicator := New List<coinsIndicatorClass>
+Global coinsIndicatorCount:Int
 
 Class coinsIndicatorClass
 
@@ -452,17 +412,25 @@ Class coinsIndicatorClass
 		gScl = 0.1
 		gRot = Rnd(0,360)
 
+		coinsIndicatorCount += 1
+
 	End
 
 	Method Draw:Void()
 
 		SetAlpha(alpha)
-		Yellow()
-		SetBlend(1)
 		DrawFont ( "+" + amount, x, y, True, 70 )
-		SetBlend(0)
-		White()
 		SetAlpha(1)
+
+		If alpha > .6
+
+			DrawImage( getImg, gx, gy, gRot, gScl, gScl )
+
+		End
+
+	End
+
+	Method Update:Void()
 
 		y -= 2
 		x -= 1
@@ -475,9 +443,14 @@ Class coinsIndicatorClass
 
 			gRot += 1
 
-			DrawImage( getImg, gx, gy, gRot, gScl, gScl )
-
 			gx -= speed * globalSpeed * Retina
+
+		End
+
+		If alpha <= 0
+
+			coinsIndicator.Remove(Self)
+			coinsIndicatorCount -= 1
 
 		End
 
@@ -495,12 +468,32 @@ End
 
 Function DrawCoinsIndicator:Void()
 
+	
+	SetColor(255, 245, 0)
+	SetBlend(1)
+
 	For Local co := Eachin coinsIndicator
 
 		co.Draw()
 
-		If co.alpha <= 0 coinsIndicator.Remove(co)
+	Next
+
+	SetBlend(0)
+	White()
+
+End
+
+Function UpdateCoinsIndicator:Void()
+
+	For Local co := Eachin coinsIndicator
+
+		co.Update()
 
 	Next
 
 End
+
+
+
+
+

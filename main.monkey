@@ -1,7 +1,5 @@
 Import imp
 
-Global coords = False
-
 Class GameGW Extends App
 		
 		Field JustChanged:Bool
@@ -16,6 +14,9 @@ Class GameGW Extends App
 			
 			
 		End
+
+		Field coords
+		Field showFPS
 		
 		Method OnUpdate()
 
@@ -36,8 +37,12 @@ Class GameGW Extends App
 			If isGCShown() Return
 			#Endif
 			
-			If KeyHit(KEY_F1) And KeyHit(KEY_SPACE)
-				If coords = True coords = False Else coords = True
+			If KeyHit(KEY_D)'' And KeyHit(KEY_SPACE)
+				coords = Not coords
+			Endif
+
+			If KeyHit(KEY_F)'' Or ControlTouch() = swipeLeft'' And KeyHit(KEY_SPACE)
+				showFPS = Not showFPS
 			Endif
 			
 			'UpdateAllAnimations()
@@ -73,6 +78,8 @@ Class GameGW Extends App
 			
 			
 		End
+
+		Field frmCount:Int, fps:Int, renderTime:Int
 		
 		Method OnRender()
 		
@@ -105,8 +112,8 @@ Class GameGW Extends App
 			'DrawText(Int(alive), 10, 10)
 			
 			'If LoadingProcess = True DrawImage (loading, cx(240), cy(160))
-			White()
-			If coords = True DrawText(MouseX() + ", "+ MouseY(), 0,0)
+			'White()
+			'If coords = True DrawText(MouseX() + ", "+ MouseY(), 0,0)
 			'DrawText(distance, 10,10)
 			'DrawText(typeBought[3], 10,30)
 			'DrawText(typeBought[4], 10,50)
@@ -137,6 +144,24 @@ Class GameGW Extends App
 			'        DrawRect(380, 220, 100, 100)
 			'        SetAlpha(1)
 			'Endif
+
+			If showFPS DrawFps()
+
+		End
+
+		Method DrawFps:Void()
+
+			frmCount += 1
+
+			If Millisecs() > renderTime + 500
+
+				renderTime = Millisecs()
+				fps = frmCount * 2
+				frmCount = -1
+
+			End
+
+			DrawText(fps, 10,10)
 
 		End
 

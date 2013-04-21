@@ -47,19 +47,19 @@ Function InitIOS:Void()
 		loadadd = ""
 		retinaStr = ""
 		retinaScl = 1
-	Elseif DeviceWidth()=960
+	Elseif DeviceWidth()=960 Or DeviceWidth() = 1136
 		Retina = 2
-		loadadd = "@2x"
+		loadadd = "@2"
 		retinaStr = "@p"
 		retinaScl = 1
 	Elseif DeviceWidth()=1024
 		Retina = 2
-		loadadd = "@2x"
+		loadadd = "@2"
 		retinaStr = "@p"
 		retinaScl = 1
 	Elseif DeviceWidth()=2048
 		Retina = 4
-		loadadd = "@2x@2x"
+		loadadd = "@4"
 		retinaStr = "@p"
 		retinaScl = 2
 	Endif
@@ -100,13 +100,13 @@ Function InitHTML:Void()
 		retinaScl = 1
 		If DeviceWidth() = 960 Or DeviceWidth() = 1136
 			Retina = 2
-			loadadd = "@2x"
+			loadadd = "@2"
 			retinaStr = "@p"
 			retinaScl = 1
 		End
 		If DeviceWidth() = 1024
 			Retina = 2
-			loadadd = "@2x"
+			loadadd = "@2"
 			retinaStr = "@p"
 			retinaScl = 1
 		End

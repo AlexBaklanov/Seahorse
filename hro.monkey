@@ -73,6 +73,9 @@ Class heroClass
 		isBoundaryReached = False
 
 		alive = True
+
+		magnet = WEAK_MAGNET * Retina
+		If weaponPurchased[13] Or friendMode magnet = STRONG_MAGNET * Retina
 		
 		'wavesScl = 0.0
 		'wavesOn = False
@@ -176,6 +179,8 @@ Class heroClass
 	Field disableJump:Bool
 
 	Method Update:Void()
+
+		GetCoinCollector()
 		
 		'When HYPER JUMP is on - no swim!
 		If weaponHyperJump.active = 1 Return
@@ -282,6 +287,18 @@ Class heroClass
 		If isBoundaryReached = False And alive And y = lowerBoundary
 			isBoundaryReached = True
 			force = 0
+		End
+
+	End
+
+	Method GetCoinCollector:Void()
+
+		If friendMode
+			collectorX = hero.x + friendHeroPositionX
+			collectorY = hero.y + friendHeroPositionY
+		Else
+			collectorX = hero.xConcerningToHero
+			collectorY = hero.yConcerningToHero
 		End
 
 	End

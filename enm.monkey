@@ -98,7 +98,7 @@ Class enemiesClass
 
 		If GameOverMode = False enemyCounter -= 1
 
-		If enemyCounter < 0 RequestEnemy()
+		If enemyCounter < 0 And alive RequestEnemy()
 
 		For Local en := Eachin enemy
 
@@ -113,7 +113,7 @@ Class enemiesClass
 			If friendMode = False And weaponCamouflage.active <> 1 And weaponHyperJump.active <> 1 And en.kicked = False And en.x < closeToHero
 
 				'COLLISION'
-				If Distance(en.pivotX, en.pivotY, hero.x, hero.y) < en.sclX * en.radius And en.catched = False
+				If en.catched = False And Distance(en.pivotX, en.pivotY, hero.x, hero.y) < en.sclX * en.radius
 					
 					If en.kicked
 
@@ -144,29 +144,23 @@ Class enemiesClass
 							CreateKick(en, 1)
 							
 						Else
-
 							
 							Local arm:Float = armor
 							Local dam:Float = en.damage * en.sclX - arm
-							Local armDamScl:Float = arm/dam
-							
-							If dam < 5
-								dam = 5
-								arm = 0
-								armDamScl = .3
-							End
 							
 							health -= dam
 							
-							globalSpeed -= 1 - armDamScl
+							globalSpeed -= 1
 							If globalSpeed < 1 globalSpeed = 1
 							
-							CreateKick(en, 1.0 - armDamScl)
+							CreateKick(en, 1)
 
 						End
 						
-						For Local ben:Int = 1 To 10 
-							CreateBonus( 3,0, en.x + Rnd(-50, 50)*Retina, en.y + Rnd(-50, 50)*Retina )
+						For Local ben:Int = 1 To 5
+
+							CreateBonus( 3,0, en.x + Rnd(-50, 50) * Retina, en.y + Rnd(-50, 50) * Retina )
+
 						Next
 
 					End

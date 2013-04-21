@@ -31,7 +31,6 @@ Class menuClass
 		For Local lp:Int = 1 To 3
 			levelPlay[lp] = New Button
 			levelPlay[lp].Init("", "menu/level"+lp+"",1,1,2)
-			'menuPerc[lp] = LoadImage( "menu/menuPerc0" + lp + "" + loadadd + ".png" )
 		Next
 
 		menuPerces.Init("menu/menuPerces" + loadadd + ".png")

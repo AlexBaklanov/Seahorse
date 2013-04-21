@@ -25,8 +25,8 @@ Global reduceImg:Image
 Global enemyCoinsImg:Image
 Global camouflageImg:Image
 
-' Order array
-Global wn:Int[] = [5,3,0,18,6,20,14,2,1,15,19,7,16,13,4,10,8,9,12,17,11]
+' Order array		0 	1 	2 	3 	4 	5 	6 	7 	8 	9 	10 	11 	12 	13 	14 	15 	16 	17 	18 	19 	20
+Global wn:Int[30]
 
 
 Function WeaponLoad:Void()

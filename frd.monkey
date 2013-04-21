@@ -11,6 +11,8 @@ Global friendImg:Image
 Global friendX:Float
 Global friendY:Float
 
+Global friendMode:Bool
+
 Global friendFramesCount:Int = 3
 Global friendFrame:Float
 Global friendAnimSpeed:Float = .2
@@ -66,6 +68,7 @@ Function FriendInit:Void()
 
 	If upgradeThe[3] > 0
 		friendMode = True
+		Print upgradeThe[3]
 	End
 
 	globalFriend = upgradeThe[3]
@@ -124,7 +127,53 @@ Function FriendUpdate:Void()
 		End
 		
 	End
+
+	ActivateFriend()
 	
+End
+
+Function FriendSpeedHandle:Void()
+
+	If friendMode
+
+		acceleration = .1
+
+		SlowDownFriend()
+
+		DeactivateFriendMode()
+
+	End
+
+End
+
+Function SlowDownFriend:Void()
+
+	globalFriend -= speed * globalSpeed
+
+	If globalFriend < 150
+
+		friendHeroPositionX += 5 * Retina
+		acceleration = -.1
+		If globalSpeed < 1 globalSpeed = 1
+
+	End
+
+End
+
+Function DeactivateFriendMode:Void()
+
+	If globalFriend <= 0
+
+		friendMode = False
+		collectorX = hero.xConcerningToHero
+		collectorY = hero.yConcerningToHero
+		magnet = WEAK_MAGNET * Retina
+		If weaponPurchased[13] magnet = STRONG_MAGNET * Retina
+		speedMax = SPEED_MAX
+		acceleration = 0
+
+	End
+
 End
 
 ' .d8b.  d8b   db d888888b .88b  d88.  .d8b.  d888888b d88888b 
@@ -163,15 +212,16 @@ Function DeinitFriend:Void()
 
 End
 
-#Rem
+'#Rem
 
-Function ShowFriendWindow:Void()
+Function ActivateFriend:Void()
 
 	If isFriendShown = False And distance > friendDistance
 
 		isFriendShown = True
 		upgradeThe[3] = 3000
 		SaveGame()
+		'friendMode = True
 
 	End
 
@@ -186,6 +236,6 @@ Function ShowFriendWindow:Void()
 
 End
 
-#End
+'#End
 
 

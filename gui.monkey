@@ -16,7 +16,6 @@ Function GUIDraw:Void()
 	DrawHealth()
 	DrawDistance()
 	DrawCoins()
-	DrawCoinsIndicator()
 	'DrawIndicators()
 	
 End

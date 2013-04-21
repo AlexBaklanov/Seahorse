@@ -101,9 +101,18 @@ Function SaveGame:Void()
 
 	'GAP FOR WEAPONS'
 
-	For Local gfm:Int = 129 To 199
+	For Local gfm:Int = 129 Until 200
 
 		addParam(0)
+
+	Next
+
+	'Weapon Order'
+
+	For Local wnpw:Int = 200 Until 230
+
+		addParam( wn[wnpw - 200] )
+		'Print wn[wnpw - 200]
 
 	Next
 
@@ -207,6 +216,14 @@ Function LoadGame:Void()
 
 		Next
 
+		'Weapon Order'
+
+		For Local wnpw:Int = 200 Until 230
+
+			wn[wnpw - 200] = Int( paramLine[wnpw] )
+
+		Next
+
 		LoadLevel(CurrentLevel)
 		
 	Else
@@ -307,6 +324,11 @@ Function ResetGame:Void()
 		weaponPurchased[ws - 100] = False
 
 	Next
+
+	'Weapon Order'
+
+		' 		0 	1 	2 	3 	4 	5 	6 	7 	8 	9 	10 	11 	12 	13 	14 	15 	16 	17 	18 	19 	20
+		wn = [	5,	3,	0,	18,	6,	20,	14,	2,	1,	15,	19,	7,	16,	13,	4,	10,	8,	9,	12,	17,	11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 End
 

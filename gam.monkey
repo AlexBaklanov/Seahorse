@@ -36,9 +36,10 @@ Class mainGameClass
 		WinInit()
 		GUIInit()
 		CrabPreviousInit()
-		FriendInit()
 
+		FriendInit()
 		hero.Init()
+
 		enemies.Init()
 		bonuses.Init()
 		obstacles.Init()
@@ -130,6 +131,7 @@ Class mainGameClass
 		CrabPreviousDraw()
 
 		hero.Draw()
+		DrawCoinsIndicator()
 
 		FriendMeetingDraw()
 
@@ -143,8 +145,6 @@ Class mainGameClass
 			Return
 
 		End
-
-		
 
 		NextWeaponDraw()
 		
@@ -401,29 +401,7 @@ Function SpeedUpdate:Void()
 
 	End
 
-	If friendMode
-
-		acceleration = .1
-
-		globalFriend -= speed * globalSpeed
-
-		If globalFriend < 150
-
-			friendHeroPositionX += 5 * Retina
-			acceleration = -.1
-			If globalSpeed < 1 globalSpeed = 1
-
-		End
-
-		If globalFriend <= 0
-
-			friendMode = False
-			speedMax = SPEED_MAX
-			acceleration = 0
-
-		End
-
-	End
+	FriendSpeedHandle()
 
 	If alive = False And crabAnimStarted = False acceleration = -.008
 

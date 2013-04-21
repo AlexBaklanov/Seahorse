@@ -13,7 +13,6 @@ Class animClass
 	Field partRot:Float[0], partSclX:Float[0], partSclY:Float[0]
 	Field keyFrameMove:Bool[0], keyFrameRot:Bool[0], keyFrameScl:Bool[0], frameCnt:Int, curFrame:Int, lastFrame:Int, frm:framesClass
 
-
 	Method Init:Void(path:String, theImg:atlasClass = Null, theFrames:framesClass = Null)
 
 		_path = path
@@ -210,13 +209,13 @@ Class animClass
 
 	End
 
-	Method Draw:Void( theX:Float, theY:Float )
+	Method Draw:Void( theX:Float, theY:Float, globalScl:Float = 1.0 )
 
 		For Local atl:Int = 0 Until img.cnt
 
 			Local f:Int = atl + curFrame * 10
 
-			img.Draw( atl, partX[f] + theX, partY[f] + theY, partRot[f], partSclX[f], partSclY[f] )
+			img.Draw( atl, partX[f] * globalScl + theX, partY[f] * globalScl + theY, partRot[f], partSclX[f] * globalScl, partSclY[f] * globalScl )
 
 		End
 

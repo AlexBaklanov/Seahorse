@@ -4,7 +4,6 @@ Import imp
 
 Const HEALTH_RUNOUT:Int = 3
 
-Global friendMode:Bool
 Global armor:Float
 
 Global CurrentUpgrade:Int
@@ -241,6 +240,7 @@ Class shopClass
 
 				powersUpgradeMode = 1
 				powersSlide = 0
+				SaveGame()
 
 			End
 
@@ -489,14 +489,18 @@ Class shopClass
 				Local upgradeW:Float = chooseUpgradeBtn[curUp].w * upgradeScl[curUp]
 				Local upgradeH:Float = chooseUpgradeBtn[curUp].h * upgradeScl[curUp]
 
-				chooseUpgradeBtn[curUp].Draw( ubX[up], ubY[up] + waveUpgrades[up], upgradeScl[curUp] )
-
+				
+				
+				
+				'ICON'
 				DrawImage (shopIcons, 	ubX[up] + upgradeW * .5,
 										ubY[up] + upgradeH * .3 + waveUpgrades[up],
 										0,
 										.5 + upgradeScl[curUp] / 2,
 										.5 + upgradeScl[curUp] / 2,
 										curUp)
+
+				chooseUpgradeBtn[curUp].Draw( ubX[up], ubY[up] + waveUpgrades[up], upgradeScl[curUp] )
 
 				'upgrade process
 				DrawUpgradeProgress(curUp, 	ubX[up] + chooseUpgradeBtn[curUp].w * .15 * upgradeScl[curUp], 
@@ -522,12 +526,12 @@ Class shopClass
 
 				End
 
-
 				'cost
 
 				Local costText:String = "|" + upgradeCost[curUp]
 				If upgradeLevel[curUp] = upgradeMax[curUp] costText = "Done"
-				Yellow()
+				
+				If coins < upgradeCost[curUp] SetColor(255, 240, 190) Else Yellow()
 				DrawFont ( costText, 	ubX[up] + upgradeW * .55, 
 										ubY[up] + upgradeH * .81 + waveUpgrades[up], 
 										True, 

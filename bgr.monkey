@@ -33,7 +33,7 @@ Function BackgroundInit:Void()
 
 	cave = LoadImage("bgr/cave"+retinaStr+".png")
 	
-	currentBgrMiddle = Rnd(0,10)
+	'currentBgrMiddle = Rnd(0,9)
 	bgrXmiddle = dw+bgrMiddleImg.Width()
 
 	bgrXactual = bgr.w[0] / 2
@@ -48,12 +48,13 @@ Function BackgroundUpdate:Void()
 	If bgrXactual < - bgr.w[0]*retinaScl	bgrXactual += bgr.w[0]*retinaScl
 	If bgrXbottom < - bgr.w[1]*retinaScl	bgrXbottom += bgr.w[1]*retinaScl
 		
-	bgrXmiddle -= speed*Retina * globalSpeed / 2.0
+	bgrXmiddle -= speed * Retina * globalSpeed / 2.0
 	If bgrXmiddle < -bgrMiddleImg.Width()*retinaScl
 		
-		bgrXmiddle = dw+bgrMiddleImg.Width()
+		bgrXmiddle = dw + bgrMiddleImg.Width()
 		currentBgrMiddle += 1
-		If currentBgrMiddle = 10 currentBgrMiddle = 1
+		If currentBgrMiddle > 9 currentBgrMiddle = 0
+		'currentBgrMiddle = Rnd(0,9)
 			
 	End
 	

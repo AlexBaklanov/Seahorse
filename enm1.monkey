@@ -62,7 +62,7 @@ Class enemyClass
 	Method Init:Void(theType:Int, nextVar:Int = 0)
 
 		type = theType
-		radius = 50 * Retina
+		radius = 30 * Retina
 
 		rot = Rnd(0,360)
 		sclX = Rnd( Float(enemyScale[theType][6..9]), Float(enemyScale[theType][12..15]) )
@@ -73,6 +73,8 @@ Class enemyClass
 		damage = enemyDamage[theType]
 		yMove = Rnd(-enemyYMove[theType], enemyYMove[theType])
 
+		pivotX = x
+		pivotY = y
 
 		If type <> 2 And type <> 3 And type <> 6
 
@@ -101,6 +103,8 @@ Class enemyClass
 				pivotX = enemyAnim.partX[0]
 				pivotY = enemyAnim.partY[0]
 				img = enemyImg[type].img[0]
+
+				'sclX = Rnd(.2, 1.0)
 
 			'one legged crab'
 			Case 3
@@ -270,7 +274,7 @@ Class enemyClass
 
 			Case 2, 3, 6
 
-				enemyAnim.Draw(x, y)
+				enemyAnim.Draw(x, y, sclX)
 
 			Default
 

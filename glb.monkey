@@ -130,6 +130,8 @@ Class Button
 	Field type:Int
 	Field Down:Bool
 	Field btnScale:Float
+
+	Field active:Bool = True
 	
 	Field bubblesReady:Bool
 
@@ -216,21 +218,25 @@ Class Button
 
 	Method Pressed:Bool()
 
-		If TouchDown(0) And TouchX() > x - px And TouchX() < x - px + w * btnScale And TouchY() > y - py And TouchY() < y - py + h * btnScale
-			Down = True
-			Return False
-		Endif
+		If active
 
-		If TouchDown(0)
-			Down = False
-			Return False
-		Endif
+			If TouchDown(0) And TouchX() > x - px And TouchX() < x - px + w * btnScale And TouchY() > y - py And TouchY() < y - py + h * btnScale
+				Down = True
+				Return False
+			Endif
 
-		If Down
-			Down = False
-			bubblesReady = True
-			Return True
-		Endif
+			If TouchDown(0)
+				Down = False
+				Return False
+			Endif
+
+			If Down
+				Down = False
+				bubblesReady = True
+				Return True
+			Endif
+
+		End
 
 		Return False
 

@@ -22,18 +22,11 @@ Class atlasClass
 		Local correctPath:Int = 4
 		Local retinaValue:Int = 1
 
-		If path.Contains("@p")
-			retinaValue = 2
+		If path.Contains("@")
+			retinaValue = Retina
 			correctPath = 6
 		End
-		If path.Contains("@2x")
-			retinaValue = 2
-			correctPath = 7
-		End
-		If path.Contains("@2x@2x")
-			retinaValue = 4
-			correctPath = 10
-		End
+
 		'end correct path'
 
 		'load data for atlas'
@@ -49,19 +42,19 @@ Class atlasClass
 
 				Select rectValue[0..1]
 
-					Case "x" xStart[imgNum] = Int(rectValue[1..])*retinaValue
+					Case "x" xStart[imgNum] = Int(rectValue[1..]) * retinaValue
 
-					Case "y" yStart[imgNum] = Int(rectValue[1..])*retinaValue
+					Case "y" yStart[imgNum] = Int(rectValue[1..]) * retinaValue
 
-					Case "w" w[imgNum] = Int(rectValue[1..])*retinaValue
+					Case "w" w[imgNum] = Int(rectValue[1..]) * retinaValue
 
-					Case "h" h[imgNum] = Int(rectValue[1..])*retinaValue
+					Case "h" h[imgNum] = Int(rectValue[1..]) * retinaValue
 
 					'pivot x'
-					Case "i" pivotX[imgNum] = Int(rectValue[1..])*retinaValue
+					Case "i" pivotX[imgNum] = Int(rectValue[1..]) * retinaValue
 
 					'pivot y'
-					Case "j" pivotY[imgNum] = Int(rectValue[1..])*retinaValue
+					Case "j" pivotY[imgNum] = Int(rectValue[1..]) * retinaValue
 
 					'frame'
 					Case "f" frm[imgNum] = Int(rectValue[1..])
