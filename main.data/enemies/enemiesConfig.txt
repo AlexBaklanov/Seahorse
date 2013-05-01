@@ -1,7 +1,7 @@
 num:00, damage:00, speed:1.0 _ 2.0, scale:1.0 _ 1.0, anim:00_00, rotspd:00.0, ymove:0.0
 num:01, damage:40, speed:2.0 _ 3.0, scale:1.0 _ 1.0, anim:00_20, rotspd:01.0, ymove:0.8
 num:02, damage:05, speed:1.0 _ 2.0, scale:1.0 _ 1.0, anim:00_60, rotspd:03.0, ymove:0.0
-num:03, damage:15, speed:0.2 _ 0.2, scale:0.9 _ 1.0, anim:00_00, rotspd:00.0, ymove:0.0
+num:03, damage:15, speed:1.2 _ 1.6, scale:0.9 _ 1.0, anim:00_00, rotspd:00.0, ymove:0.0
 num:04, damage:14, speed:0.2 _ 0.2, scale:1.0 _ 1.0, anim:00_00, rotspd:00.0, ymove:0.0
 num:05, damage:40, speed:2.2 _ 2.5, scale:0.6 _ 1.0, anim:00_00, rotspd:00.0, ymove:0.0
 num:06, damage:10, speed:2.5 _ 2.5, scale:0.8 _ 1.0, anim:00_04, rotspd:00.0, ymove:0.0

@@ -76,22 +76,12 @@ Class enemyClass
 		pivotX = x
 		pivotY = y
 
-		If type <> 2 And type <> 3 And type <> 6
-
-			img = enemies.img[type]
-			x = dw + img.Width()
-			y = Rnd(0,dh)
-			w = img.Width()
-			h = img.Height()
-
-		End
-
 		Local zeroAdd:String
 		If type < 10 zeroAdd = "0" Else zeroAdd = ""
 
 		Select type
 
-			Case 2, 3, 6
+			Case 1, 2, 3, 6
 
 				enemyAnim.Init("enemies/enemy" + zeroAdd + "" + type + "/", enemyImg[type], enemyFrm[type])
 				enemyAnim.Play(LOOP)
@@ -101,17 +91,23 @@ Class enemyClass
 				x = dw + w
 				y = Rnd(0,dh)
 				pivotX = enemyAnim.partX[0]
+
+				sclX = Rnd( .6, .9 )
+				sclY = sclX
+
 				pivotY = enemyAnim.partY[0]
 				img = enemyImg[type].img[0]
 
 				'sclX = Rnd(.2, 1.0)
 
 			'one legged crab'
+			#rem
 			Case 3
 				rot = 0
 				swimForce = -1
 				swimNegPosRnd = -1
 				y = Rnd( dh/2, dh*2 )
+			#end
 
 			'crab otshelnik'
 			Case 4
@@ -264,6 +260,18 @@ Class enemyClass
 				rot = 0
 				swimForce = -1
 
+			Default
+
+				If type <> 1 And type <> 2 And type <> 3 And type <> 6
+
+				img = enemies.img[type]
+				x = dw + img.Width()
+				y = Rnd(0,dh)
+				w = img.Width()
+				h = img.Height()
+
+		End
+
 		End
 
 	End
@@ -272,7 +280,7 @@ Class enemyClass
 
 		Select type
 
-			Case 2, 3, 6
+			Case 1, 2, 3, 6
 
 				enemyAnim.Draw(x, y, sclX)
 
@@ -310,6 +318,7 @@ Class enemyClass
 
 		Select type
 
+			#rem
 			Case 1
 				
 				y += yMove * Retina
@@ -321,8 +330,9 @@ Class enemyClass
 					frame = 0
 				End
 				If anim = 0 CreateBonus(3,0,x,y)
+			#end
 
-			Case 2, 6
+			Case 1, 2, 3, 6
 
 				enemyAnim.Update()
 
@@ -338,7 +348,7 @@ Class enemyClass
 					frame = 0 
 					End
 				If anim = 0 CreateBonus(3,0,x,y)
-				#end
+				
 
 			Case 3
 
@@ -367,6 +377,8 @@ Class enemyClass
 						swimNegPosRnd = -1
 					End
 				End
+
+			#end
 
 			Case 4
 

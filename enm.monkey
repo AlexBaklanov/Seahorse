@@ -28,7 +28,7 @@ Class enemiesClass
 	'   88    88 V8o88    88       88    
 	'  .88.   88  V888   .88.      88    
 	'Y888888P VP   V8P Y888888P    YP    
-	
+
 	Method Init:Void()
 		
 		OldLevel = CurrentLevel
@@ -50,7 +50,7 @@ Class enemiesClass
 					Case 29
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 2, Image.MidHandle)
 
-					Case 1, 8, 9, 11, 14, 16, 19, 22, 24, 27, 28, 30
+					Case 8, 9, 11, 14, 16, 19, 22, 24, 27, 28, 30
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 3, Image.MidHandle)
 
 					Case 7, 15, 23, 21
@@ -65,7 +65,7 @@ Class enemiesClass
 					Case 17
 						img[enm] = LoadImage("enemies/enemy"+zeroAdd+""+enm+""+loadadd + ".png", 100*Retina, 100*Retina, 8, Image.MidHandle)
 
-					Case 2, 3, 6
+					Case 1, 2, 3, 6
 
 						enemyImg[enm] = New atlasClass
 						enemyImg[enm].Init("enemies/enemy" + zeroAdd + "" + enm + "/img" + loadadd + ".png")
@@ -289,7 +289,7 @@ Function ToLoadEnemy:Bool(curEnemy:Int)
 			
 			Select curEnemy
 				
-				Case 2, 6, 3, 25, 30, 8, 22, 5, 19, 18
+				Case 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 				
 					Return True
 					
