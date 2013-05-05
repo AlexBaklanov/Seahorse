@@ -7,7 +7,7 @@ Class framesClass
 	Field f:Int
 	Field partX:Float[10000], partY:Float[10000]
 	Field partRot:Float[10000], partSclX:Float[10000], partSclY:Float[10000]
-	Field keyFrameMove:Bool[941], keyFrameRot:Bool[941], keyFrameScl:Bool[941], frameCnt:Int, lastFrame:Int
+	Field keyFrameMove:Bool[10000], keyFrameRot:Bool[10000], keyFrameScl:Bool[10000], frameCnt:Int, lastFrame:Int
 	Field part:Int[10]
 
 	Method Init:Void(path:String)
@@ -36,9 +36,9 @@ Class framesClass
 
 					Case "m"
 
-						keyFrameMove[f] = False
-						keyFrameRot[f] = False
-						keyFrameScl[f] = False
+						keyFrameMove[p + f * 10] = False
+						keyFrameRot[p + f * 10] = False
+						keyFrameScl[p + f * 10] = False
 
 						Local ft:Int = Int(animValue[1..])
 
@@ -50,9 +50,9 @@ Class framesClass
 
 						Local l:Int = Int(ft/2)
 
-						If v = 1 keyFrameMove[f] = True
-						If t = 1 keyFrameRot[f] = True
-						If l = 1 keyFrameScl[f] = True
+						If v = 1 keyFrameMove[p + f * 10] = True
+						If t = 1 keyFrameRot[p + f * 10] = True
+						If l = 1 keyFrameScl[p + f * 10] = True
 
 					Case "x" partX[ p + f * 10 ] = Int(animValue[1..]) * Retina
 

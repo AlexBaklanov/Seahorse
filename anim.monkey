@@ -47,17 +47,17 @@ Class animClass
 		partSclX = partSclX.Resize(arrSize)
 		partSclY = partSclY.Resize(arrSize)
 
-		keyFrameMove = keyFrameMove.Resize(lastFrame + 1)
-		keyFrameRot = keyFrameRot.Resize(lastFrame + 1)
-		keyFrameScl = keyFrameScl.Resize(lastFrame + 1)
+		keyFrameMove = keyFrameMove.Resize(arrSize)
+		keyFrameRot = keyFrameRot.Resize(arrSize)
+		keyFrameScl = keyFrameScl.Resize(arrSize)
 
 		For Local p:Int = 0 Until img.cnt
 
 			For Local f:Int = 0 To lastFrame
 
-				keyFrameMove[f] = frm.keyFrameMove[f]
-				keyFrameRot[f] = frm.keyFrameRot[f]
-				keyFrameScl[f] = frm.keyFrameScl[f]
+				keyFrameMove[p + f * 10] = frm.keyFrameMove[p + f * 10]
+				keyFrameRot[p + f * 10] = frm.keyFrameRot[p + f * 10]
+				keyFrameScl[p + f * 10] = frm.keyFrameScl[p + f * 10]
 
 				partX[ p + f * 10 ] = frm.partX[ p + f * 10 ]
 				partY[ p + f * 10 ] = frm.partY[ p + f * 10 ]
@@ -135,10 +135,10 @@ Class animClass
 
 		For Local pt:Int = 0 Until img.cnt
 
-			If keyFrameMove[curFrame] = False
+			If keyFrameMove[pt + curFrame * 10] = False
 
-				Local prevKey:Int = PrevKey(kfMOVE)
-				Local nextKey:Int = NextKey(kfMOVE)
+				Local prevKey:Int = PrevKey(kfMOVE, pt)
+				Local nextKey:Int = NextKey(kfMOVE, pt)
 
 				Local prev10:Int = pt + prevKey * 10
 				Local next10:Int = pt + nextKey * 10
@@ -148,10 +148,10 @@ Class animClass
 
 			End
 
-			If keyFrameRot[curFrame] = False
+			If keyFrameRot[pt + curFrame * 10] = False
 
-				Local prevKey:Int = PrevKey(kfROT)
-				Local nextKey:Int = NextKey(kfROT)
+				Local prevKey:Int = PrevKey(kfROT, pt)
+				Local nextKey:Int = NextKey(kfROT, pt)
 
 				Local prev10:Int = pt + prevKey * 10
 				Local next10:Int = pt + nextKey * 10
@@ -160,10 +160,10 @@ Class animClass
 
 			End
 
-			If keyFrameScl[curFrame] = False
+			If keyFrameScl[pt + curFrame * 10] = False
 
-				Local prevKey:Int = PrevKey(kfSCL)
-				Local nextKey:Int = NextKey(kfSCL)
+				Local prevKey:Int = PrevKey(kfSCL, pt)
+				Local nextKey:Int = NextKey(kfSCL, pt)
 
 				Local prev10:Int = pt + prevKey * 10
 				Local next10:Int = pt + nextKey * 10
@@ -181,29 +181,37 @@ Class animClass
 	Field kfROT:Int = 1
 	Field kfSCL:Int = 2
 
-	Method NextKey:Int(kfType:Int)
+	Method NextKey:Float(kfType:Int, thePart:Int)
 
-		For Local fr:Int = curFrame To lastFrame
+		';For Local pt:Int = 0 Until part.cnt
 
-			If kfType = 0 And keyFrameMove[fr] Return fr
-			If kfType = 1 And keyFrameRot[fr] Return fr
-			If kfType = 2 And keyFrameScl[fr] Return fr
+			For Local fr:Int = curFrame To 940
 
-		End
+				If kfType = 0 And keyFrameMove[thePart + fr * 10] Return fr
+				If kfType = 1 And keyFrameRot[thePart + fr * 10] Return fr
+				If kfType = 2 And keyFrameScl[thePart + fr * 10] Return fr
+
+			End
+
+		'Next
 
 		Return 0
 
 	End
 
-	Method PrevKey:Int(kfType:Int)
+	Method PrevKey:Float(kfType:Int, thePart:Int)
 
-		For Local fr:Int = curFrame - 1 To 0 Step -1
+		'For Local pt:Int = 0 Until part.cnt
 
-			If kfType = 0 And keyFrameMove[fr] Return fr
-			If kfType = 1 And keyFrameRot[fr] Return fr
-			If kfType = 2 And keyFrameScl[fr] Return fr
+			For Local fr:Int = curFrame - 1 To 0 Step -1
 
-		End
+				If kfType = 0 And keyFrameMove[thePart + fr * 10] Return fr
+				If kfType = 1 And keyFrameRot[thePart + fr * 10] Return fr
+				If kfType = 2 And keyFrameScl[thePart + fr * 10] Return fr
+
+			End
+
+		'Next
 
 		Return 0
 
@@ -215,7 +223,29 @@ Class animClass
 
 			Local f:Int = atl + curFrame * 10
 
-			img.Draw( atl, partX[f] * globalScl + theX, partY[f] * globalScl + theY, partRot[f], partSclX[f] * globalScl, partSclY[f] * globalScl )
+			If atl > 0
+
+				'part.Draw(at, partX[atF] + partX[0 + curFrame * 10], partY[atF] + partY[0 + curFrame * 10], partRot[atF], partSclX[atF], partSclY[atF])
+				img.Draw( 	atl, 
+							partX[f] * globalScl + theX + partX[0 + curFrame * 10] * globalScl, 
+							partY[f] * globalScl + theY + partY[0 + curFrame * 10] * globalScl, 
+							partRot[f], 
+							partSclX[f] * globalScl, 
+							partSclY[f] * globalScl )
+
+			Else
+				
+				'part.Draw(at, partX[atF], partY[atF], partRot[atF], partSclX[atF], partSclY[atF])
+				img.Draw( 	atl, 
+							partX[f] * globalScl + theX, 
+							partY[f] * globalScl + theY, 
+							partRot[f], 
+							partSclX[f] * globalScl, 
+							partSclY[f] * globalScl )
+
+			End
+
+			
 
 		End
 
